@@ -1,0 +1,1371 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>YPN Media HQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Montserrat:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: an operator's console. Masthead + tab rail, then dense panels; gold is reserved for the one number that matters on each panel. */
+:root{
+  --bg:#f6f4ef; --surface:#ffffff; --surface-2:#efece4; --line:#dcd6c8;
+  --fg:#14130f; --muted:#6b665a; --gold:#a8862f; --gold-soft:#efe4c6;
+  --good:#2f7a4e; --warn:#a96a12; --bad:#a63b2e; --scrim:rgba(20,19,15,.38);
+  --display:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --body:"Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e0d0b; --surface:#171612; --surface-2:#1f1d18; --line:#2e2b24;
+  --fg:#f1ede3; --muted:#a39d8e; --gold:#c9a84c; --gold-soft:#3a3120;
+  --good:#5fb583; --warn:#d9a24a; --bad:#e0796b; --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e0d0b; --surface:#171612; --surface-2:#1f1d18; --line:#2e2b24;
+  --fg:#f1ede3; --muted:#a39d8e; --gold:#c9a84c; --gold-soft:#3a3120;
+  --good:#5fb583; --warn:#d9a24a; --bad:#e0796b; --scrim:rgba(0,0,0,.6); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1180px;margin:0 auto}
+header.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:28px 16px;border-bottom:1px solid var(--line)}
+.mast h1{font-family:var(--display);font-weight:600;font-size:clamp(30px,5vw,44px);line-height:1;margin:0;letter-spacing:.01em}
+.mast h1 em{font-style:normal;color:var(--gold)}
+.mast .sub{color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-top:6px}
+.sync{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.sync b{color:var(--fg);font-weight:500}
+nav.tabs{display:flex;gap:4px;overflow-x:auto;padding-block:10px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+nav.tabs button{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;background:none;border:1px solid transparent;color:var(--muted);padding:8px 12px;border-radius:4px;cursor:pointer;white-space:nowrap}
+nav.tabs button[aria-selected="true"]{color:var(--fg);border-color:var(--line);background:var(--surface)}
+nav.tabs button:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+section.view{padding-block:22px}
+h2{font-family:var(--display);font-weight:600;font-size:26px;margin:0 0 4px;text-wrap:balance}
+h3{font:600 11px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.lede{color:var(--muted);max-width:68ch;margin:0 0 18px}
+.grid{display:grid;gap:14px}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;min-width:0}
+.kpi .v{font-family:var(--display);font-size:36px;font-weight:600;line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi .v.gold{color:var(--gold)}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .src{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:8px}
+.pill{display:inline-block;font:600 10px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.pill.good{color:var(--good);border-color:currentColor}
+.pill.warn{color:var(--warn);border-color:currentColor}
+.pill.bad{color:var(--bad);border-color:currentColor}
+.pill.gold{color:var(--gold);border-color:currentColor}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font:600 10px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:12px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:baseline}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+svg text{fill:var(--muted);font-family:var(--mono);font-size:10px}
+.chart{width:100%;height:auto;display:block}
+form.entry{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));align-items:end}
+label{display:grid;gap:4px;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+input,select,textarea{font:400 14px var(--body);color:var(--fg);background:var(--surface-2);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%;min-width:0}
+.btn{font:600 12px var(--body);letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-radius:4px;border:1px solid var(--fg);background:var(--fg);color:var(--bg);cursor:pointer}
+.btn.ghost{background:none;color:var(--fg);border-color:var(--line)}
+.btn.tiny{padding:4px 8px;font-size:10px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:4px;font-size:13px;z-index:20}
+.board{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr))}
+.proj{border:1px solid var(--line);border-radius:6px;background:var(--surface);overflow:hidden;min-width:0}
+.proj .band{height:6px}
+.proj .in{padding:14px;display:grid;gap:8px}
+.proj .name{font-family:var(--display);font-size:20px;font-weight:600;line-height:1.15}
+.bar{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:12px}
+.row b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.empty{border:1px dashed var(--line);border-radius:6px;padding:18px;color:var(--muted);font-size:13px}
+.flow{display:grid;gap:0;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.flow div{padding:14px;border-right:1px solid var(--line);background:var(--surface)}
+.flow div:last-child{border-right:0}
+.flow b{display:block;font-family:var(--display);font-size:18px}
+.flow span{font-size:12px;color:var(--muted)}
+.flow .who{font-family:var(--mono);font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+ol.play{margin:0;padding-left:20px;display:grid;gap:10px}
+ol.play li::marker{font-family:var(--display);color:var(--gold);font-weight:700}
+.note{font-size:12px;color:var(--muted);border-left:2px solid var(--gold);padding-left:10px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted);margin-top:8px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .5s ease}}
+.kanban{display:grid;gap:12px;grid-template-columns:repeat(5,minmax(240px,1fr));overflow-x:auto;padding-bottom:6px}
+.col{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.col>header{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.col>header b{font:600 11px var(--body);letter-spacing:.1em;text-transform:uppercase}
+.col>header span{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.col .hint{font-size:11px;color:var(--muted)}
+.job{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--muted);border-radius:4px;padding:10px;display:grid;gap:6px;min-width:0}
+.job .t{font-weight:600;line-height:1.3}
+.job .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:11px;color:var(--muted)}
+.job a{color:var(--fg);text-decoration-color:var(--gold);text-underline-offset:3px;word-break:break-word}
+.job .links{display:grid;gap:2px;font-size:12px}
+.job .brief{font-size:12px;color:var(--muted);white-space:pre-wrap}
+.job .acts{display:flex;flex-wrap:wrap;gap:6px}
+.job details{font-size:12px}
+.job details summary{cursor:pointer;color:var(--muted)}
+.fb{display:grid;gap:6px;margin-top:6px}
+.fb div{border-left:2px solid var(--line);padding-left:8px}
+.fb .who{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.check{display:grid;gap:4px;margin:6px 0}
+.check label{display:flex;gap:8px;align-items:flex-start;text-transform:none;letter-spacing:0;font-weight:400;font-size:12px;color:var(--fg)}
+.check input{width:auto;margin-top:2px}
+.drive{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.drive a{display:block;border:1px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--surface);color:var(--fg);text-decoration:none;min-width:0}
+.drive a b{display:block;font-size:13px}
+.drive a span{font-size:11px;color:var(--muted)}
+.igbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.igbar .sync b{color:var(--good)}
+.igbar .sync.warn{color:var(--warn)}
+.drive .meta{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:6px}
+.drive .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:11px;padding:0;text-decoration:underline}
+.lab2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr))}
+.cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))}
+.scr{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;display:grid;gap:8px;min-width:0;align-content:start}
+.scr .hook{font-family:var(--display);font-size:21px;font-weight:600;line-height:1.2;text-wrap:balance}
+.scr .t{font-weight:600}
+.scr ol{margin:0;padding-left:18px;display:grid;gap:3px;font-size:13px}
+.scr details{font-size:12px}
+.scr details summary{cursor:pointer;color:var(--muted)}
+.scr .body{white-space:pre-wrap;color:var(--fg);margin-top:4px}
+.scr .acts{display:flex;flex-wrap:wrap;gap:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.vc{font-size:11px;color:var(--warn)}
+.hunt{display:grid;gap:8px}
+.hunt label{display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;color:var(--fg)}
+.hunt input{width:auto;margin-top:3px}
+.hunt b{font-weight:600}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:end;margin-bottom:12px}
+.filters label{min-width:160px}
+.ai-status{font-size:13px;color:var(--muted);min-height:1.4em}
+.drawer-bg{position:fixed;inset:0;background:var(--scrim);z-index:30}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(620px,100%);background:var(--bg);border-left:1px solid var(--line);z-index:31;overflow-y:auto;padding:calc(14px + env(safe-area-inset-top,0px)) 20px calc(28px + env(safe-area-inset-bottom,0px))}
+.dr-top{position:sticky;top:calc(-14px - env(safe-area-inset-top,0px));display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--bg);padding-block:8px;z-index:2}
+.dr-band{height:6px;border-radius:3px;margin:6px 0 14px}
+.dr-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:10px;margin:14px 0 4px}
+.dr-stats div{border:1px solid var(--line);border-radius:6px;padding:10px 12px;background:var(--surface)}
+.dr-stats b{display:block;font-family:var(--display);font-size:26px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.dr-stats span{font-size:11px;color:var(--muted)}
+.dr-sec{margin-top:22px}
+.dr-list{display:grid;gap:6px}
+.dr-row{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface);font-size:13px;min-width:0}
+.dr-row>span:first-child{min-width:0;overflow-wrap:anywhere}
+button.dr-row{width:100%;text-align:left;cursor:pointer;color:var(--fg);font:inherit}
+button.dr-row:hover{border-color:var(--gold)}
+.dr-row a{color:var(--fg);text-decoration-color:var(--gold);text-underline-offset:3px}
+.linkish{background:none;border:0;padding:0;color:var(--fg);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;cursor:pointer;font:inherit}
+.dels{display:grid;gap:6px}
+.dels label{display:flex;gap:10px;align-items:flex-start;text-transform:none;letter-spacing:0;font-weight:400;font-size:13px;color:var(--fg);padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.dels input{width:auto;margin-top:2px}
+.dels .done span.txt{text-decoration:line-through;color:var(--muted)}
+.dels .meta{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap;display:flex;gap:8px}
+.dels .x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:11px;padding:0;text-decoration:underline}
+.proj[data-open],tr[data-open]{cursor:pointer}
+.proj[data-open]:hover{border-color:var(--gold)}
+tr[data-open]:hover td{background:var(--surface-2)}
+.proj[data-open]:focus-visible,tr[data-open]:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tap{font-size:12px;color:var(--muted);margin:-8px 0 12px}
+.cal-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px}
+.cal-month{font-family:var(--display);font-size:clamp(34px,6vw,54px);font-weight:600;line-height:1;margin:4px 0 0}
+.cal-ctrl{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{font:600 11px var(--body);letter-spacing:.06em;text-transform:uppercase;background:none;border:0;padding:8px 10px;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.cal-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:14px}
+.cal-stats div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.cal-stats b{display:block;font-family:var(--display);font-size:28px;font-weight:600;line-height:1.1;font-variant-numeric:tabular-nums}
+.cal-stats span{font-size:12px;color:var(--muted)}
+.cal-stats .warnv b{color:var(--warn)}
+.cal-legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:12px;color:var(--muted);margin-bottom:10px;align-items:center}
+.cal-legend i{display:inline-block;width:14px;height:10px;margin-right:6px;vertical-align:middle;background:var(--surface-2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;min-width:0}
+.cal-dow{background:var(--surface-2);font:600 10px var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 8px}
+.cal-day{background:var(--surface);min-height:122px;padding:6px;display:flex;flex-direction:column;gap:4px;cursor:pointer;min-width:0}
+.cal-day:hover{background:var(--surface-2)}
+.cal-day.out{background:var(--bg)}
+.cal-day.out .cal-num{opacity:.45}
+.cal-day.past .chip{opacity:.65}
+.cal-day.today{box-shadow:inset 0 3px 0 var(--gold)}
+.cal-num{display:flex;align-items:center;gap:6px;font-family:var(--display);font-size:20px;font-weight:600;line-height:1}
+.cal-day.today .cal-num span{color:var(--gold)}
+.film-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);display:inline-block;flex:none}
+.chip{display:flex;align-items:center;gap:6px;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-left-width:3px;border-radius:3px;padding:4px 6px;font:500 12px/1.25 var(--body);color:var(--fg);cursor:pointer;min-width:0}
+.chip:hover{border-color:var(--gold)}
+.chip .ct{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .sd{width:7px;height:7px;border-radius:50%;flex:none}
+.pl-ev{border-left-color:var(--gold)!important;background:var(--gold-soft)}
+.pl-le{border-left-color:var(--fg)!important}
+.pl-ip{border-left-style:dashed!important;border-left-color:var(--muted)!important}
+.ag-day{display:grid;grid-template-columns:76px minmax(0,1fr);gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}
+.ag-date b{display:block;font-family:var(--display);font-size:20px;line-height:1.1}
+.ag-date span{font-size:12px;color:var(--muted);font-family:var(--mono)}
+.ag-date.today b{color:var(--gold)}
+.ag-list{display:grid;gap:6px;min-width:0}
+.ag-item{border-left-width:3px}
+.ag-empty{background:none;border:1px dashed var(--line);border-radius:4px;padding:9px 12px;color:var(--muted);text-align:left;cursor:pointer;font:inherit;font-size:13px}
+.pe{display:grid;gap:14px}
+.pe-title-l input{font-family:var(--display);font-size:24px;font-weight:600}
+.pe-row{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.pe-checks{display:flex;flex-wrap:wrap;gap:8px 16px}
+.pe-checks label{display:flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px;color:var(--fg)}
+.pe-checks input{width:auto}
+.pe-hook{font-family:var(--display);font-size:19px}
+.pe-script{display:grid;gap:8px;margin-bottom:8px}
+.pe-beat{display:grid;grid-template-columns:72px minmax(0,1fr) minmax(0,1.3fr) auto;gap:6px;align-items:start}
+.pe-footrow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) auto auto;gap:6px;align-items:center;margin-bottom:6px}
+.pe-footrow a{font-size:12px;color:var(--fg);white-space:nowrap}
+.pe-footnote{grid-column:1/-1;font-size:11px;color:var(--muted);margin-top:-2px}
+.pe-inline{display:flex;flex-wrap:wrap;gap:6px}
+.pe-inline select{width:auto;flex:1;min-width:180px}
+.pe-cap-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.pe-actions{display:flex;flex-wrap:wrap;gap:8px}
+.x{background:none;border:0;color:var(--muted);cursor:pointer;font-size:11px;padding:4px;text-decoration:underline}
+@media (max-width:700px){
+  .cal-day{min-height:72px;padding:4px 3px}
+  .cal-num{font-size:15px}
+  .chip{padding:2px 4px;font-size:10px;gap:3px}
+  .chip .sd,.chip .fm{display:none}
+  .cal-dow{padding:4px 2px;text-align:center;letter-spacing:.04em}
+  .pe-beat{grid-template-columns:60px minmax(0,1fr)}
+  .pe-beat .pe-w{grid-column:1/-1}
+  .pe-footrow{grid-template-columns:minmax(0,1fr) auto}
+  .pe-footrow .pe-fu{grid-column:1/-1;grid-row:2}
+}
+.role{font:600 10px var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-left:8px}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <div>
+    <h1>YPN <em>Media</em> HQ</h1>
+    <div class="sub">Marketing command, team operations, sponsors</div>
+  </div>
+  <div class="sync" id="sync">Connecting to shared workspace…</div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Sections">
+  <button role="tab" data-tab="calendar" aria-selected="true">Calendar</button>
+  <button role="tab" data-tab="command" aria-selected="false">Command</button>
+  <button role="tab" data-tab="queue" aria-selected="false">Edit queue</button>
+  <button role="tab" data-tab="lab" aria-selected="false">Content lab</button>
+  <button role="tab" data-tab="projects" aria-selected="false">Projects</button>
+  <button role="tab" data-tab="team" aria-selected="false">Team &amp; pay</button>
+  <button role="tab" data-tab="log" aria-selected="false">Log work</button>
+  <button role="tab" data-tab="sponsors" aria-selected="false">Sponsors</button>
+  <button role="tab" data-tab="spend" aria-selected="false" data-admin>Ad spend</button>
+  <button role="tab" data-tab="system" aria-selected="false">Operating system</button>
+</nav>
+
+<!-- COMMAND -->
+<!-- CALENDAR -->
+<section class="view" id="v-calendar">
+  <div class="cal-head">
+    <div><div class="small muted" style="letter-spacing:.12em;text-transform:uppercase">Content calendar</div><h2 class="cal-month" id="cal-month">October 2026</h2></div>
+    <div class="cal-ctrl">
+      <button class="btn tiny ghost" type="button" id="cal-prev" aria-label="Previous month">Prev</button>
+      <button class="btn tiny ghost" type="button" id="cal-today">Today</button>
+      <button class="btn tiny ghost" type="button" id="cal-next" aria-label="Next month">Next</button>
+      <div class="seg" role="group" aria-label="Calendar view"><button type="button" data-view="month" aria-pressed="true">Month</button><button type="button" data-view="agenda" aria-pressed="false">Next 14 days</button></div>
+      <button class="btn tiny" type="button" id="cal-add">Add post</button>
+    </div>
+  </div>
+  <div class="cal-stats" id="cal-stats"></div>
+  <div class="cal-legend"><span><i class="pl-ev" style="border-left:3px solid var(--gold)"></i>Events</span><span><i style="border-left:3px solid var(--fg)"></i>Learn</span><span><i style="border-left:3px dashed var(--muted)"></i>In person</span><span><i class="film-dot" style="width:7px;height:7px"></i>Sanjeet films</span><span>Tap a post to open and edit it. Tap an empty day to add one.</span></div>
+  <div id="cal-gridwrap" class="tbl-wrap"><div class="cal-grid" id="cal-grid"></div></div>
+  <div id="cal-agenda" hidden></div>
+  <p class="small muted" style="margin-top:12px">Anyone with access can add, edit or move posts. Every save is shared with the whole team.</p>
+</section>
+
+<section class="view" id="v-command" hidden>
+  <h2>Chief of marketing view</h2>
+  <p class="lede">Instagram performance from Metricool, cost of the media team from logged work, and sponsor revenue, side by side. The number to watch is cost per 1,000 views: it tells you whether the team is getting cheaper to run as output scales.</p>
+  <div class="igbar"><span id="ig-status" class="sync">Instagram: snapshot from Oct 11</span><button class="btn tiny ghost" id="ig-refresh" type="button" hidden>Refresh from Metricool</button><button class="btn tiny" id="ig-allow" type="button" hidden>Allow Metricool</button></div>
+  <div class="grid g4" id="kpis"></div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="panel">
+      <h3>Daily Instagram views · last 30 days</h3>
+      <svg class="chart" id="ch-views" viewBox="0 0 520 200" role="img" aria-label="Daily Instagram views"></svg>
+      <div class="legend"><span><i class="sw" style="background:var(--gold)"></i>Views (organic + paid)</span><span><i class="sw" style="background:var(--muted);opacity:.5"></i>Reach</span></div>
+    </div>
+    <div class="panel">
+      <h3>Followers · @ypnexus</h3>
+      <svg class="chart" id="ch-followers" viewBox="0 0 520 200" role="img" aria-label="Follower count"></svg>
+      <div class="legend"><span><i class="sw" style="background:var(--good)"></i>Gained per day</span><span><i class="sw" style="background:var(--bad)"></i>Lost per day</span><span><i class="sw" style="background:var(--fg)"></i>Total</span></div>
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div class="panel">
+      <h3>Spend by project</h3>
+      <div id="spend-by-project"></div>
+    </div>
+    <div class="panel">
+      <h3>Hours by person</h3>
+      <div id="hours-by-person"></div>
+    </div>
+    <div class="panel">
+      <h3>Where the team's time goes</h3>
+      <div id="hours-by-task"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <h3>What the data says this month</h3>
+    <div id="insights" class="grid" style="gap:10px"></div>
+  </div>
+</section>
+
+<!-- EDIT QUEUE -->
+<section class="view" id="v-queue" hidden>
+  <h2>Edit queue</h2>
+  <p class="lede">Every clip and reel sent to India moves left to right. Raw footage goes out as a Drive link with a brief; the cut comes back as a Drive link; Sanjeet approves or sends notes. Editors are paid per <b>approved</b> edit, so nothing gets paid twice and nothing unapproved gets paid at all.</p>
+
+  <div class="panel" style="margin-bottom:14px">
+    <h3>Drive folders</h3>
+    <p class="small muted" style="margin:0 0 10px">Anyone on the team can add a folder: raw footage, finished edits, photo galleries. In Google Drive, share the folder with the team first, or the link opens to a permission wall.</p>
+    <div class="drive" id="drive"></div>
+    <form class="entry" id="f-link" style="margin-top:12px">
+      <label for="k-name">Folder name<input id="k-name" required placeholder="e.g. Darius, Oct 20 Mixer raw"></label>
+      <label for="k-purpose">What's in it<input id="k-purpose" placeholder="Raw footage, finished cuts, photos"></label>
+      <label for="k-proj">Project<select id="k-proj"></select></label>
+      <label for="k-url" style="grid-column:span 2">Drive link<input id="k-url" type="url" required placeholder="https://drive.google.com/drive/folders/…"></label>
+      <button class="btn" type="submit">Add folder</button>
+    </form>
+  </div>
+
+  <div class="kanban" id="kanban"></div>
+
+  <div class="panel" style="margin-top:16px" id="new-job" data-admin-panel>
+    <h3>Send a new edit job</h3>
+    <form class="entry" id="f-job">
+      <label for="j-title">Job<input id="j-title" required placeholder="e.g. Soiree recap reel, 30s"></label>
+      <label for="j-proj">Project<select id="j-proj"></select></label>
+      <label for="j-who">Editor<select id="j-who"></select></label>
+      <label for="j-fmt">Format<select id="j-fmt"><option>Reel 9:16</option><option>Clip set (3–5)</option><option>Interview cut</option><option>Story sequence</option><option>Carousel</option><option>LinkedIn video 1:1</option></select></label>
+      <label for="j-due">Due<input id="j-due" type="date"></label>
+      <label for="j-raw" style="grid-column:1/-1">Raw footage Drive link<input id="j-raw" type="url" required placeholder="https://drive.google.com/drive/folders/…"></label>
+      <label for="j-ref" style="grid-column:1/-1">Reference or example link (optional)<input id="j-ref" type="url" placeholder="A reel whose pacing you want matched"></label>
+      <label for="j-brief" style="grid-column:1/-1">Brief<textarea id="j-brief" rows="4" placeholder="Hook in the first 2 seconds. Length. Which moments to use. Caption text. Sponsor tags owed. Music direction."></textarea></label>
+      <button class="btn" type="submit">Send to editor</button>
+    </form>
+  </div>
+</section>
+
+<!-- CONTENT LAB -->
+<section class="view" id="v-lab" hidden>
+  <h2>Content lab</h2>
+  <p class="lede">Where scripts come from. Yuki hunts trends every Monday and logs them on the radar, drafts scripts from the best ones, and Sanjeet approves what he will film. Approved scripts get filmed, then go straight into the edit queue. Target: 3 to 4 filmed scripts a week, about two thirds of them reels.</p>
+
+  <div class="lab2">
+    <div class="panel">
+      <h3>Weekly trend hunt</h3>
+      <p class="small muted" id="hunt-meta" style="margin:0 0 10px"></p>
+      <div class="hunt" id="hunt"></div>
+      <p class="note" style="margin-top:12px">Keep a trend only if all three are true: it fits a premium, understated brand (no clowning, no shouting); Sanjeet can film it in under 15 minutes; it moves a viewer one step toward applying.</p>
+    </div>
+
+    <div class="panel" id="ai-panel">
+      <h3>Draft scripts with Claude</h3>
+      <form class="entry" id="f-ai">
+        <label for="ai-topic" style="grid-column:1/-1">Topic, trend or asset<input id="ai-topic" required placeholder="e.g. Best-dressed guests at the Oct 20 mixer"></label>
+        <label for="ai-aud">Audience<select id="ai-aud"><option>Owners and founders</option><option>Early-career professionals</option><option>Both</option></select></label>
+        <label for="ai-fmt">Format<select id="ai-fmt"><option>Reel, talking head</option><option>Reel, event footage</option><option>Reel, trend format</option><option>Carousel</option><option>Story sequence</option><option>LinkedIn post</option></select></label>
+        <label for="ai-pillar">Pillar<select id="ai-pillar"><option value="">Any</option></select></label>
+        <div style="display:flex;gap:8px"><button class="btn" type="submit" id="ai-go">Draft 3 scripts</button><button class="btn ghost" type="button" id="ai-stop" hidden>Stop</button></div>
+      </form>
+      <p class="ai-status" id="ai-status"></p>
+      <div class="cards" id="ai-out"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <h3>Trend radar</h3>
+    <div class="cards" id="trends"></div>
+    <form class="entry" id="f-trend" style="margin-top:14px">
+      <label for="t-name">Trend<input id="t-name" required placeholder="Name the sound, format or topic"></label>
+      <label for="t-kind">Type<select id="t-kind"><option>Audio</option><option>Format</option><option>Topic or news</option><option>Visual style</option><option>Meme</option></select></label>
+      <label for="t-where">Spotted on<select id="t-where"><option>Instagram Reels</option><option>Instagram Inspiration tab</option><option>Reels Trends</option><option>TikTok Creative Center</option><option>LinkedIn</option><option>Benchmark account</option><option>YPN DMs or comments</option><option>Other</option></select></label>
+      <label for="t-link">Example link<input id="t-link" type="url" placeholder="https://www.instagram.com/reel/…"></label>
+      <label for="t-angle" style="grid-column:1/-1">YPN angle: how we'd use it<input id="t-angle" required placeholder="e.g. Use the audio over arrival shots at the mixer: the moment the doors open"></label>
+      <button class="btn" type="submit">Log trend</button>
+    </form>
+  </div>
+
+  <div class="panel" style="margin-top:14px">
+    <h3>Script bank</h3>
+    <div class="filters">
+      <label for="sc-filter">Show<select id="sc-filter"><option value="open">In progress</option><option value="Idea">Ideas</option><option value="Approved">Approved, ready to film</option><option value="Filmed">Filmed</option><option value="Sent to edit">Sent to edit</option><option value="Passed">Passed</option><option value="all">Everything</option></select></label>
+      <label for="sc-pillar">Pillar<select id="sc-pillar"><option value="">All pillars</option></select></label>
+    </div>
+    <div class="cards" id="scripts"></div>
+    <details style="margin-top:14px">
+      <summary class="btn ghost" style="display:inline-block">Write a script by hand</summary>
+      <form class="entry" id="f-script" style="margin-top:12px">
+        <label for="s2-title">Working title<input id="s2-title" required></label>
+        <label for="s2-fmt">Format<select id="s2-fmt"><option>Reel, talking head</option><option>Reel, event footage</option><option>Reel, trend format</option><option>Carousel</option><option>Story sequence</option><option>LinkedIn post</option></select></label>
+        <label for="s2-pillar">Pillar<select id="s2-pillar"></select></label>
+        <label for="s2-funnel">Funnel stage<select id="s2-funnel"><option>attract</option><option>nurture</option><option>convert</option></select></label>
+        <label for="s2-hook" style="grid-column:1/-1">Hook (first line, under 12 words)<input id="s2-hook" required></label>
+        <label for="s2-beats" style="grid-column:1/-1">Beats, one per line<textarea id="s2-beats" rows="4"></textarea></label>
+        <label for="s2-onscreen" style="grid-column:1/-1">On-screen text<input id="s2-onscreen"></label>
+        <label for="s2-caption" style="grid-column:1/-1">Caption<textarea id="s2-caption" rows="3"></textarea></label>
+        <label for="s2-cta">Call to action<input id="s2-cta" placeholder="Apply at the link in bio"></label>
+        <label for="s2-source">Source footage or asset<input id="s2-source"></label>
+        <button class="btn" type="submit">Save script</button>
+      </form>
+    </details>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="view" id="v-projects" hidden>
+  <h2>Projects</h2>
+  <p class="lede">Every hour and every dollar is tagged to one of these. The color follows the project everywhere: logs, charts, sponsor deals.</p>
+  <p class="tap">Tap any project to open it.</p>
+  <div class="board" id="board"></div>
+  <div class="panel" style="margin-top:16px" data-admin-panel>
+    <h3>Add a project</h3>
+    <form class="entry" id="f-project">
+      <label for="p-name">Name<input id="p-name" required placeholder="e.g. November mixer"></label>
+      <label for="p-type">Type<select id="p-type"><option>Event</option><option>Always-on content</option><option>Sponsor deliverable</option><option>Campaign</option><option>Internal</option></select></label>
+      <label for="p-date">Date or deadline<input id="p-date" type="date"></label>
+      <label for="p-budget">Media budget ($)<input id="p-budget" type="number" min="0" step="1"></label>
+      <label for="p-color">Color<input id="p-color" type="color" value="#2f6f8f"></label>
+      <button class="btn" type="submit">Add project</button>
+    </form>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="view" id="v-team" hidden>
+  <h2>Team &amp; pay</h2>
+  <p class="lede">One roster for everyone who touches media: core team, interns, contractors, and offshore editors. Pay is calculated from what each person logs, so payouts match the work.</p>
+  <div class="panel tbl-wrap"><table id="t-team"></table></div>
+  <div class="panel" style="margin-top:16px" data-admin-panel>
+    <h3>Add or update a person</h3>
+    <form class="entry" id="f-person">
+      <label for="m-name">Name<input id="m-name" required></label>
+      <label for="m-role">Role<input id="m-role" placeholder="e.g. Reel editor"></label>
+      <label for="m-tier">Group<select id="m-tier"><option>Core</option><option>Intern</option><option>Contractor</option><option>Offshore</option></select></label>
+      <label for="m-model">Pay model<select id="m-model"><option value="hourly">Hourly</option><option value="per_unit">Per deliverable</option><option value="monthly">Flat monthly</option><option value="unpaid">Unpaid / equity</option><option value="tbd">Not set</option></select></label>
+      <label for="m-rate">Rate ($)<input id="m-rate" type="number" min="0" step="0.01"></label>
+      <label for="m-via">Paid via<input id="m-via" placeholder="Mercury, Shivoy, Venmo"></label>
+      <button class="btn" type="submit">Save person</button>
+    </form>
+  </div>
+</section>
+
+<!-- LOG -->
+<section class="view" id="v-log" hidden>
+  <h2>Log work</h2>
+  <p class="lede">Team members log here at the end of each work block. Hours drive hourly pay; deliverables drive per-edit pay. No log, no payout.</p>
+  <div class="panel">
+    <form class="entry" id="f-log">
+      <label for="l-who">Who<select id="l-who"></select></label>
+      <label for="l-proj">Project<select id="l-proj"></select></label>
+      <label for="l-date">Date<input id="l-date" type="date"></label>
+      <label for="l-task">Task<select id="l-task"><option>Filming</option><option>Editing</option><option>Clipping</option><option>Design</option><option>Copy &amp; captions</option><option>Posting &amp; community</option><option>Photography</option><option>Strategy &amp; planning</option><option>Sponsor deliverable</option></select></label>
+      <label for="l-hours">Hours<input id="l-hours" type="number" min="0" step="0.25" value="1"></label>
+      <label for="l-units">Deliverables<input id="l-units" type="number" min="0" step="1" value="0"></label>
+      <label for="l-note" style="grid-column:1/-1">What was produced<input id="l-note" placeholder="e.g. 3 reel cuts from White Soiree gallery"></label>
+      <button class="btn" type="submit">Log it</button>
+    </form>
+  </div>
+  <div class="panel tbl-wrap" style="margin-top:16px">
+    <h3>Recent work</h3>
+    <table id="t-log"></table>
+  </div>
+</section>
+
+<!-- SPONSORS -->
+<section class="view" id="v-sponsors" hidden>
+  <h2>Sponsors</h2>
+  <p class="lede">Every sponsor is owed content. This is where the team sees what each partner gets and ticks off deliverables as they ship. Deal values are visible only to Sanjeet and Zaylan.</p>
+  <p class="tap">Tap any sponsor to open it.</p>
+  <div class="grid g4" id="sp-kpis" data-admin-panel></div>
+  <div class="panel tbl-wrap" style="margin-top:14px"><table id="t-sponsors"></table></div>
+  <div class="panel" style="margin-top:16px" data-admin-panel>
+    <h3>Add or update a sponsor</h3>
+    <form class="entry" id="f-sponsor">
+      <label for="s-name">Company<input id="s-name" required></label>
+      <label for="s-contact">Contact<input id="s-contact"></label>
+      <label for="s-stage">Stage<select id="s-stage"><option>Prospect</option><option>Proposal sent</option><option>Committed</option><option>Paid</option><option>In-kind</option><option>Declined</option></select></label>
+      <label for="s-proj">Project<select id="s-proj"></select></label>
+      <label for="s-amt">Cash value ($)<input id="s-amt" type="number" min="0" step="1"></label>
+      <label for="s-del" style="grid-column:1/-1">Media deliverables owed (separate with commas; each becomes a checklist item)<input id="s-del" placeholder="e.g. logo on recap reel, 2 story tags, partner spotlight post"></label>
+      <button class="btn" type="submit">Save sponsor</button>
+    </form>
+  </div>
+</section>
+
+<!-- SPEND -->
+<section class="view" id="v-spend" hidden>
+  <h2>Ad spend</h2>
+  <p class="lede">Paid and outbound spend by channel. Meta Ads is not connected to Metricool yet, so spend is entered here until it is.</p>
+  <div class="grid g4" id="ad-kpis"></div>
+  <div class="panel tbl-wrap" style="margin-top:14px"><table id="t-spend"></table></div>
+  <div class="panel" style="margin-top:16px">
+    <h3>Record spend</h3>
+    <form class="entry" id="f-spend">
+      <label for="a-date">Date<input id="a-date" type="date"></label>
+      <label for="a-ch">Channel<select id="a-ch"><option>Instagram ads</option><option>Facebook ads</option><option>LinkedIn ads</option><option>Google ads</option><option>Luma promotion</option><option>Influencer / creator</option><option>Outbound tools</option><option>Other</option></select></label>
+      <label for="a-proj">Project<select id="a-proj"></select></label>
+      <label for="a-amt">Amount ($)<input id="a-amt" type="number" min="0" step="0.01" required></label>
+      <label for="a-res">Result<input id="a-res" placeholder="e.g. 42 RSVPs, 3 applications"></label>
+      <button class="btn" type="submit">Record</button>
+    </form>
+  </div>
+</section>
+
+<!-- SYSTEM -->
+<section class="view" id="v-system" hidden>
+  <h2>The operating system</h2>
+  <p class="lede">How the media team runs as one machine. Every asset moves through the same five stations, every station has one owner, and nothing ships to a YPN channel without Sanjeet's approval.</p>
+  <div class="flow">
+    <div><span class="who">Darius · Simon</span><b>Capture</b><span>Event galleries, interviews, B-roll. Upload raw within 24 hours to the shared drive, tagged by project.</span></div>
+    <div><span class="who">Yuki · interns</span><b>Select</b><span>Pull the 20 best moments, write the hook list, log the brief per asset.</span></div>
+    <div><span class="who">Aman · clippers</span><b>Cut</b><span>Reels and clips at $20 per edit, 48 to 72 hour turnaround, one revision.</span></div>
+    <div><span class="who">Sanjeet</span><b>Approve</b><span>Voice, brand, member consent. Approve in Metricool review queue.</span></div>
+    <div><span class="who">Yuki</span><b>Ship &amp; measure</b><span>Schedule, reply to DMs within 2 hours, log results weekly.</span></div>
+  </div>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="panel">
+      <h3>Scaling playbook</h3>
+      <ol class="play">
+        <li><b>Pay for output, not time, offshore.</b> Editors and clippers are per deliverable. Hourly pay is only for in-room work: filming, events, community.</li>
+        <li><b>One interview, four assets.</b> Spotlight carousel, quote graphic, reel cut, story sequence. Capture costs once; distribution compounds.</li>
+        <li><b>Log or it didn't happen.</b> Payouts run from this log on the 1st. That single rule makes the cost data real.</li>
+        <li><b>Promote by owning a station.</b> An intern who runs Select for a full month cleanly earns the Ship station. That is the career ladder, and it keeps good interns.</li>
+        <li><b>Cut what doesn't convert.</b> Monthly, rank formats by profile visits, DMs and applications per dollar. The bottom format loses its slot.</li>
+        <li><b>Sponsors fund media.</b> Every sponsor package names its content deliverables. Target: sponsor cash covers the monthly media payroll.</li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h3>Weekly rhythm</h3>
+      <div class="tbl-wrap"><table>
+        <tr><th>When</th><th>What</th><th>Owner</th></tr>
+        <tr><td>Monday</td><td>Week's shot list and edit queue set from the content calendar</td><td>Yuki</td></tr>
+        <tr><td>Wednesday</td><td>YPN Weekly: this dashboard on screen, five minutes on numbers</td><td>Sanjeet, Zaylan</td></tr>
+        <tr><td>Event day</td><td>Day-of stories live; raw upload by noon next day</td><td>Darius, Yuki</td></tr>
+        <tr><td>+48 hours</td><td>Recap reel posted with an application CTA</td><td>Aman, Sanjeet</td></tr>
+        <tr><td>Friday</td><td>Logs closed for the week; open edits chased</td><td>Yuki</td></tr>
+        <tr><td>1st of month</td><td>Payouts from logs; Shivoy pays Aman; format cut review</td><td>Sanjeet</td></tr>
+      </table></div>
+      <p class="note" style="margin-top:12px">Metric definitions: views and reach come from Metricool for @ypnexus. Team cost is hours × hourly rate plus deliverables × per-edit rate plus flat monthly fees. Cost per 1,000 views divides this month's team cost by this month's Instagram views.</p>
+    </div>
+  </div>
+</section>
+</div>
+<div class="drawer-bg" id="drawer-bg" hidden></div>
+<aside class="drawer" id="drawer" hidden role="dialog" aria-modal="true" aria-labelledby="dr-title">
+  <div class="dr-top"><span class="small muted" id="dr-kind"></span><button class="btn tiny ghost" type="button" id="dr-close">Close</button></div>
+  <div id="dr-body"></div>
+</aside>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// Fallback Instagram snapshot for @ypnexus (Metricool, Oct 11 2026). Replaced by the saved sync or a live pull.
+// [date, followers, views, reach, reels, reelsViews, interactions, gained, lost, accountsEngaged]
+let IG=[["2026-09-11",null,4929,null,1,5378,128,9,2,null],["2026-09-12",null,2982,null,1,4899,126,6,3,null],["2026-09-13",null,3776,null,0,0,0,15,5,null],["2026-09-14",null,4863,721,0,0,0,15,2,37],["2026-09-15",null,23038,2531,0,0,0,30,3,149],["2026-09-16",null,14511,3314,1,1723,102,16,4,209],["2026-09-17",null,9863,1765,1,3277,527,13,4,206],["2026-09-18",2722,14455,2307,0,0,0,7,6,296],["2026-09-19",2728,17260,3934,0,0,325,11,7,368],["2026-09-20",2733,17221,4734,2,3143,97,12,6,335],["2026-09-21",2738,19470,6812,1,2119,20,6,3,268],["2026-09-22",2741,15426,6156,2,10988,396,11,4,216],["2026-09-23",2744,13594,3770,3,7139,315,7,3,141],["2026-09-24",2756,7444,2003,3,8156,280,8,2,62],["2026-09-25",2762,20631,1512,0,0,0,15,5,160],["2026-09-26",2767,8040,990,0,0,0,7,3,82],["2026-09-27",2779,9410,1985,0,0,0,9,4,142],["2026-09-28",2780,18164,2855,1,1835,77,15,5,308],["2026-09-29",2788,18020,2369,0,0,204,14,10,1103],["2026-09-30",2794,10125,2249,1,2079,155,11,0,147],["2026-10-01",2807,7731,4097,0,0,0,13,3,69],["2026-10-02",2809,7163,5127,0,0,68,8,5,54],["2026-10-03",2814,8529,1456,0,0,0,10,5,238],["2026-10-04",2819,6460,2545,0,0,0,6,2,94],["2026-10-05",2828,8154,3154,1,139,2,12,2,88],["2026-10-06",2841,10109,2875,0,0,0,14,6,159],["2026-10-07",2844,13317,6156,2,3302,96,8,2,170],["2026-10-08",2853,10672,5628,2,3217,212,15,2,93],["2026-10-09",2861,5135,1450,0,0,0,0,0,38]];
+
+const $=s=>document.querySelector(s);
+const fmt=n=>n==null||isNaN(n)?"—":Math.round(n).toLocaleString("en-US");
+const usd=n=>n==null||isNaN(n)?"—":"$"+Number(n).toLocaleString("en-US",{maximumFractionDigits:n%1?2:0});
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const md=d=>String(d||"").slice(5).replace("-","/");
+const safeUrl=u=>/^https:\/\//i.test(u||"")?u:"";
+const today=new Date().toISOString().slice(0,10);
+const plusDays=n=>new Date(Date.now()+n*864e5).toISOString().slice(0,10);
+["#l-date","#a-date"].forEach(s=>$(s).value=today);
+$("#j-due").value=plusDays(3);
+
+let S={team:[],rates:[],projects:[],logs:[],sponsors:[],spend:[],edits:[],approvals:[],links:[],scripts:[],trends:[],hunts:[],cash:[],deliverables:[],posts:[]};
+let igMeta={source:"snapshot",at:Date.parse("2026-10-11T21:40:00-07:00")};
+let db=null, user=null, isAdmin=false, myId=null, names={};
+
+function toast(m){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2600)}
+
+// Tabs
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.tab)));
+function showTab(id){
+  const btn=document.querySelector(`nav.tabs button[data-tab="${id}"]`);
+  if(!btn||btn.hidden) id="calendar";
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===id));
+  document.querySelectorAll("section.view").forEach(s=>s.hidden=s.id!=="v-"+id);
+  try{localStorage.setItem("ypn-tab2",id)}catch(e){}
+}
+function initialTab(){
+  let t=null;
+  if(/^#[a-z]+$/.test(location.hash))t=location.hash.slice(1);
+  else{try{t=localStorage.getItem("ypn-tab2")}catch(e){}}
+  showTab(t||"calendar");
+}
+function applyRole(){
+  document.querySelectorAll("nav.tabs [data-admin]").forEach(b=>b.hidden=!isAdmin);
+  document.querySelectorAll("[data-admin-panel]").forEach(p=>p.hidden=!isAdmin);
+}
+
+// Cost model. Rates live in an admin-only collection; editors never see them.
+const personById=id=>S.team.find(p=>p.id===id);
+const projById=id=>S.projects.find(p=>p.id===id);
+const cashOf=id=>Number((S.cash.find(c=>c.id===id)||{}).amount)||0;
+const rateOf=id=>S.rates.find(r=>r.id===id)||{};
+const monthKey=d=>(d||"").slice(0,7);
+const MK=today.slice(0,7);
+function logCost(l){
+  const r=rateOf(l.who);
+  return r.model==="hourly"?(Number(r.rate)||0)*(Number(l.hours)||0):0;
+}
+function approvedThisMonth(pid){return S.approvals.filter(a=>a.assignee===pid&&monthKey(a.date)===MK).length}
+function owedThisMonth(pid){
+  const r=rateOf(pid), rate=Number(r.rate)||0;
+  if(r.model==="monthly")return rate;
+  if(r.model==="per_unit")return rate*approvedThisMonth(pid);
+  if(r.model==="hourly")return S.logs.filter(l=>l.who===pid&&monthKey(l.date)===MK).reduce((a,l)=>a+logCost(l),0);
+  return 0;
+}
+function approvalCost(a){const r=rateOf(a.assignee);return r.model==="per_unit"?Number(r.rate)||0:0}
+function monthly(){
+  const logs=S.logs.filter(l=>monthKey(l.date)===MK);
+  const cost=S.team.reduce((a,p)=>a+owedThisMonth(p.id),0);
+  const hours=logs.reduce((a,l)=>a+(Number(l.hours)||0),0);
+  const approved=S.approvals.filter(a=>monthKey(a.date)===MK).length;
+  const ads=S.spend.filter(s=>monthKey(s.date)===MK).reduce((a,s)=>a+(Number(s.amount)||0),0);
+  return {logs,cost,hours,approved,ads};
+}
+
+// Charts
+function niceStep(r){const p=Math.pow(10,Math.floor(Math.log10(r||1)));const m=r/p;return (m<=1?1:m<=2?2:m<=5?5:10)*p}
+function lineChart(svg,series,opts){
+  const W=520,H=200,L=44,R=10,T=12,B=26,w=W-L-R,h=H-T-B,n=IG.length;
+  const all=series.flatMap(s=>s.vals.filter(v=>v!=null));
+  let lo=0,hi=Math.max(...all);
+  if(opts.tight)lo=Math.min(...all);
+  const step=niceStep((hi-lo)/4);hi=Math.ceil(hi/step)*step;if(opts.tight)lo=Math.floor(lo/step)*step;
+  const x=i=>L+i*(w/(n-1)),y=v=>T+h-(v-lo)/(hi-lo)*h;
+  let g="";
+  for(let v=lo;v<=hi+1e-9;v+=step){g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${y(v)+3}" text-anchor="end">${v>=1000?(v/1000)+"k":v}</text>`}
+  [0,7,14,21,28].forEach(i=>{if(i<n)g+=`<text x="${x(i)}" y="${H-8}" text-anchor="middle">${md(IG[i][0])}</text>`});
+  series.forEach(s=>{
+    const pts=s.vals.map((v,i)=>v==null?null:[x(i),y(v)]).filter(Boolean);
+    const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+    if(s.area)g+=`<path d="${d} L${pts[pts.length-1][0]} ${y(lo)} L${pts[0][0]} ${y(lo)} Z" fill="${s.color}" opacity=".12"/>`;
+    g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${s.wd||2}" opacity="${s.op||1}" stroke-linejoin="round"/>`;
+    const e=pts[pts.length-1];if(s.dot)g+=`<circle cx="${e[0]}" cy="${e[1]}" r="3.5" fill="${s.color}"/>`;
+  });
+  svg.innerHTML=g;
+}
+function barList(el,rows,colorFn,valFmt,emptyMsg){
+  if(!rows.length){el.innerHTML=`<div class="empty">${emptyMsg||"Nothing logged this month yet. Entries from the Log work tab appear here."}</div>`;return}
+  const max=Math.max(...rows.map(r=>r.v))||1;
+  el.innerHTML=rows.map(r=>`<div style="display:grid;gap:4px;margin-bottom:10px"><div class="row"><span><i class="sw" style="background:${colorFn(r)}"></i>${esc(r.k)}</span><b>${valFmt(r.v)}</b></div><div class="bar"><i style="width:${(r.v/max*100).toFixed(1)}%;background:${colorFn(r)}"></i></div></div>`).join("");
+}
+
+function renderCommand(){
+  const views=IG.reduce((a,r)=>a+(r[2]||0),0);
+  const fRow=IG.find(r=>r[1]),f0=fRow?fRow[1]:0,f1=([...IG].reverse().find(r=>r[1])||[0,0])[1];
+  const gained=IG.reduce((a,r)=>a+r[7],0),lost=IG.reduce((a,r)=>a+r[8],0);
+  const reels=IG.reduce((a,r)=>a+r[4],0),rv=IG.reduce((a,r)=>a+r[5],0);
+  const m=monthly();
+  const viewsMonth=IG.filter(r=>r[0]>=MK+"-01").reduce((a,r)=>a+(r[2]||0),0);
+  const cpm=m.cost&&viewsMonth?m.cost/(viewsMonth/1000):null;
+  const sponsorCash=S.sponsors.filter(s=>["Committed","Paid"].includes(s.stage)).reduce((a,s)=>a+cashOf(s.id),0);
+  const open=S.edits.filter(e=>e.status!=="Approved").length;
+  const k=[
+    {l:`Instagram views, ${md(IG[0][0])} – ${md(IG[IG.length-1][0])}`,v:fmt(views),gold:1,src:igSourceLabel()},
+    {l:`Followers, up ${fmt(f1-f0)} since ${fRow?md(fRow[0]):"start"}`,v:fmt(f1),src:`+${gained} gained / −${lost} lost`},
+    {l:`Views from ${reels} reels`,v:fmt(rv),src:`${fmt(rv/Math.max(reels,1))} avg per reel`},
+    {l:"Edits in the queue",v:open,src:`${m.approved} approved this month`},
+  ];
+  if(isAdmin)k.push(
+    {l:"Media team cost this month",v:usd(m.cost),src:`${m.hours.toFixed(1)} hrs logged · ${m.approved} approved edits`},
+    {l:"Cost per 1,000 views",v:cpm?usd(cpm):"—",src:cpm?"team cost ÷ month views":"needs rates and logged work"},
+    {l:"Sponsor cash committed",v:sponsorCash?usd(sponsorCash):"—",src:`${S.sponsors.filter(s=>!["Declined","Prospect"].includes(s.stage)).length} active sponsors`});
+  $("#kpis").innerHTML=k.map(k=>`<div class="panel kpi"><div class="v ${k.gold?"gold":""}">${k.v}</div><div class="l">${k.l}</div><div class="src">${k.src}</div></div>`).join("");
+
+  lineChart($("#ch-views"),[{vals:IG.map(r=>r[3]),color:"var(--muted)",op:.6,wd:1.5},{vals:IG.map(r=>r[2]),color:"var(--gold)",area:1,dot:1}],{});
+  lineChart($("#ch-followers"),[{vals:IG.map(r=>r[1]),color:"var(--fg)",dot:1}],{tight:1});
+  const svg=$("#ch-followers"),n=IG.length,L=44,w=466,base=174,maxg=Math.max(...IG.map(r=>r[7]));
+  let ov="";
+  IG.forEach((r,i)=>{const x=L+i*(w/(n-1));
+    if(r[7])ov+=`<rect x="${x-3}" y="${base-r[7]/maxg*40}" width="3" height="${r[7]/maxg*40}" fill="var(--good)" opacity=".8"/>`;
+    if(r[8])ov+=`<rect x="${x}" y="${base-r[8]/maxg*40}" width="3" height="${r[8]/maxg*40}" fill="var(--bad)" opacity=".8"/>`;});
+  svg.insertAdjacentHTML("afterbegin",ov);
+
+  const sp=$("#spend-by-project").closest(".panel");
+  sp.hidden=!isAdmin;
+  if(isAdmin){
+    const byP={};
+    m.logs.forEach(l=>{byP[l.project]=(byP[l.project]||0)+logCost(l)});
+    S.approvals.filter(a=>monthKey(a.date)===MK).forEach(a=>{byP[a.project]=(byP[a.project]||0)+approvalCost(a)});
+    S.spend.filter(s=>monthKey(s.date)===MK).forEach(s=>{byP[s.project]=(byP[s.project]||0)+(Number(s.amount)||0)});
+    barList($("#spend-by-project"),Object.entries(byP).filter(e=>e[1]>0).map(([k,v])=>({id:k,k:projById(k)?.name||"Unassigned",v})).sort((a,b)=>b.v-a.v),r=>projById(r.id)?.color||"var(--muted)",usd,"No spend yet this month. Set rates on Team & pay, then approved edits and logged hours show here.");
+  }
+  const byW={};m.logs.forEach(l=>{byW[l.who]=(byW[l.who]||0)+(Number(l.hours)||0)});
+  barList($("#hours-by-person"),Object.entries(byW).map(([k,v])=>({k:personById(k)?.name||"Unknown",v})).sort((a,b)=>b.v-a.v),()=>"var(--gold)",v=>v.toFixed(1)+" h");
+  const byT={};m.logs.forEach(l=>{byT[l.task]=(byT[l.task]||0)+(Number(l.hours)||0)});
+  barList($("#hours-by-task"),Object.entries(byT).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v),()=>"var(--fg)",v=>v.toFixed(1)+" h");
+
+  const peak=[...IG].sort((a,b)=>b[2]-a[2])[0];
+  const firstHalf=IG.slice(0,15).reduce((a,r)=>a+r[2],0),secondHalf=IG.slice(15).reduce((a,r)=>a+r[2],0);
+  const bestReel=[...IG].sort((a,b)=>b[5]-a[5])[0];
+  const late=S.edits.filter(e=>e.status!=="Approved"&&e.due&&e.due<today).length;
+  const ins=[
+    ["good",`Peak day: ${md(peak[0])} with ${fmt(peak[2])} views. Check what posted that week; event weeks have been your distribution engine.`],
+    [secondHalf<firstHalf?"warn":"good",`Views in the last 14 days are ${fmt(secondHalf)} vs ${fmt(firstHalf)} in the 15 days before, a ${Math.round((secondHalf/firstHalf-1)*100)}% change. Use the edit queue to fill the weeks between events.`],
+    ["gold",`The best reel day (${md(bestReel[0])}) pulled ${fmt(bestReel[5])} reel views. Recut that format first.`],
+  ];
+  if(late)ins.push(["warn",`${late} edit job${late>1?"s are":" is"} past due in the queue.`]);
+  if(isAdmin)ins.push(["warn","Meta Ads is not connected to Metricool, so paid spend and cost per application cannot be measured automatically yet."]);
+  $("#insights").innerHTML=ins.map(([c,t])=>`<div style="display:flex;gap:10px;align-items:baseline"><span class="pill ${c}">${c==="good"?"Working":c==="warn"?"Watch":"Act"}</span><span>${t}</span></div>`).join("");
+}
+
+// Edit queue
+const STAGES=[
+  {k:"Brief",hint:"Written, not yet picked up"},
+  {k:"In edit",hint:"Editor is cutting"},
+  {k:"In review",hint:"Cut delivered, waiting on Sanjeet"},
+  {k:"Changes requested",hint:"Back with the editor"},
+  {k:"Approved",hint:"Ready to schedule · counts toward pay"},
+];
+const CHECKS=["Hook lands in the first 2 seconds","Captions burned in, spelled right, sentence case","YPN look: gold and black, no off-brand fonts or emoji","No exclamation points or hype words on screen","Sponsor tags and logos that are owed are in","Anyone featured has approved being posted","9:16, under 60 seconds, audio cleared"];
+function nameOf(id){return names[id]?.name||personById(id)?.name||"Team"}
+function dueState(e){
+  if(e.status==="Approved"||!e.due)return null;
+  if(e.due<today)return["bad","Late"];
+  if(e.due===today)return["warn","Due today"];
+  return["","Due "+e.due.slice(5).replace("-","/")];
+}
+async function renderQueue(){
+  const ids=[...new Set([...S.edits.flatMap(e=>(e.feedback||[]).map(f=>f.by)),...S.links.map(l=>l.addedBy),...S.deliverables.map(d=>d.doneBy),...S.posts.map(x=>x.updatedBy)].filter(Boolean))];
+  if(user&&ids.length){try{names=await user.profiles(ids)}catch(e){}}
+  const links=S.links.slice().sort((a,b)=>((a.order||99)-(b.order||99))||String(a.created||"").localeCompare(String(b.created||"")));
+  $("#drive").innerHTML=links.length?links.map(l=>{if(!safeUrl(l.url))return "";const mine=myId&&l.addedBy===myId;
+    return `<div><a href="${esc(l.url)}" target="_blank" rel="noopener"><b>${esc(l.name)}</b><span>${esc(l.purpose||"")}</span></a><div class="meta small muted"><span>${l.addedBy?"Added by "+esc(names[l.addedBy]?.name||"a teammate"):"Pinned"}</span>${isAdmin||mine?`<button class="x" type="button" data-unlink="${esc(l.id)}">Remove</button>`:""}</div></div>`}).join(""):`<div class="empty">No Drive folders yet. Add the first one below.</div>`;
+  const kb=$("#kanban");
+  kb.innerHTML=STAGES.map(st=>{
+    const jobs=S.edits.filter(e=>e.status===st.k).sort((a,b)=>(a.due||"9").localeCompare(b.due||"9"));
+    const shown=st.k==="Approved"?jobs.slice(-8).reverse():jobs;
+    return `<div class="col"><header><b>${st.k}</b><span>${jobs.length}</span></header><div class="hint">${st.hint}</div>${shown.map(jobCard).join("")||'<div class="hint" style="opacity:.7">Nothing here</div>'}</div>`;
+  }).join("");
+}
+function jobCard(e){
+  const p=projById(e.project),d=dueState(e),raw=safeUrl(e.rawLink),cut=safeUrl(e.cutLink),ref=safeUrl(e.refLink);
+  const fb=(e.feedback||[]).slice(-6);
+  let acts="";
+  if(e.status==="Brief")acts+=`<button class="btn tiny ghost" data-act="start" data-id="${esc(e.id)}">Start editing</button>`;
+  if(e.status==="In edit"||e.status==="Changes requested")acts+=`<label for="cut-${esc(e.id)}" style="width:100%">Finished cut Drive link<input id="cut-${esc(e.id)}" type="url" placeholder="https://drive.google.com/…" value="${esc(e.cutLink||"")}"></label><button class="btn tiny" data-act="submit" data-id="${esc(e.id)}">Submit for review</button>`;
+  if(e.status==="In review"&&isAdmin){
+    acts+=`<div class="check" id="chk-${esc(e.id)}">${CHECKS.map((c,i)=>`<label for="c-${esc(e.id)}-${i}"><input type="checkbox" id="c-${esc(e.id)}-${i}">${c}</label>`).join("")}</div>
+    <label for="note-${esc(e.id)}" style="width:100%">Notes for the editor<textarea id="note-${esc(e.id)}" rows="2" placeholder="Timestamped changes, e.g. 0:04 cut the pause"></textarea></label>
+    <button class="btn tiny" data-act="approve" data-id="${esc(e.id)}">Approve</button><button class="btn tiny ghost" data-act="changes" data-id="${esc(e.id)}">Request changes</button>`;
+  }
+  if(e.status==="In review"&&!isAdmin)acts+=`<span class="small muted">Waiting on Sanjeet's review</span>`;
+  if(e.status!=="Approved"&&e.status!=="In review"&&e.status!=="Brief")acts+=`<label for="msg-${esc(e.id)}" style="width:100%">Question or note<input id="msg-${esc(e.id)}" placeholder="Ask about the brief"></label><button class="btn tiny ghost" data-act="note" data-id="${esc(e.id)}">Send note</button>`;
+  return `<article class="job" style="border-left-color:${esc(p?.color||"var(--muted)")}">
+    <div class="t">${esc(e.title)}</div>
+    <div class="meta"><span>${esc(e.format||"")}</span><span>· ${esc(personById(e.assignee)?.name||"Unassigned")}</span>${e.version?`<span>· v${e.version}</span>`:""}${d?`<span class="pill ${d[0]}">${d[1]}</span>`:""}</div>
+    ${p?`<div class="meta"><i class="sw" style="background:${esc(p.color)}"></i>${esc(p.name)}</div>`:""}
+    <div class="links">${raw?`<a href="${esc(raw)}" target="_blank" rel="noopener">Raw footage ↗</a>`:""}${ref?`<a href="${esc(ref)}" target="_blank" rel="noopener">Reference ↗</a>`:""}${cut?`<a href="${esc(cut)}" target="_blank" rel="noopener"><b>Latest cut ↗</b></a>`:""}</div>
+    ${e.brief?`<details><summary>Brief</summary><div class="brief">${esc(e.brief)}</div></details>`:""}
+    ${fb.length?`<details ${e.status==="Changes requested"?"open":""}><summary>Notes (${(e.feedback||[]).length})</summary><div class="fb">${fb.map(f=>`<div><span class="who">${esc(nameOf(f.by))} · ${esc((f.at||"").slice(5,10).replace("-","/"))}${f.kind==="changes"?" · changes":""}</span><br>${esc(f.text)}</div>`).join("")}</div></details>`:""}
+    ${acts?`<div class="acts">${acts}</div>`:""}
+  </article>`;
+}
+$("#kanban").addEventListener("click",async ev=>{
+  const b=ev.target.closest("button[data-act]");if(!b||!guard())return;
+  const id=b.dataset.id,act=b.dataset.act,e=S.edits.find(x=>x.id===id);if(!e)return;
+  const ref=db.doc("edits/"+id);
+  const fbAdd=(text,kind)=>[...(e.feedback||[]),{by:myId,text,kind:kind||"note",at:new Date().toISOString()}];
+  b.disabled=true;
+  try{
+    if(act==="start"){await ref.update({status:"In edit",startedAt:new Date().toISOString()});toast("Moved to In edit")}
+    if(act==="submit"){
+      const url=($("#cut-"+id).value||"").trim();
+      if(!safeUrl(url)){toast("Paste the Drive link to the finished cut first.");b.disabled=false;return}
+      await ref.update({status:"In review",cutLink:url,version:(Number(e.version)||0)+1,submittedAt:new Date().toISOString()});toast("Sent for review")}
+    if(act==="note"){
+      const t=($("#msg-"+id).value||"").trim();if(!t){b.disabled=false;return}
+      await ref.update({feedback:fbAdd(t)});toast("Note added")}
+    if(act==="changes"){
+      const t=($("#note-"+id).value||"").trim();
+      if(!t){toast("Write what needs to change so the editor can fix it in one pass.");b.disabled=false;return}
+      await ref.update({status:"Changes requested",feedback:fbAdd(t,"changes")});toast("Sent back with notes")}
+    if(act==="approve"){
+      const boxes=[...document.querySelectorAll(`#chk-${CSS.escape(id)} input`)];
+      if(boxes.some(x=>!x.checked)){toast("Tick every review check before approving.");b.disabled=false;return}
+      const t=($("#note-"+id).value||"").trim();
+      await db.doc("approvals/"+id).set({assignee:e.assignee,project:e.project,date:today,version:Number(e.version)||1,title:e.title,by:myId});
+      await ref.update({status:"Approved",approvedAt:new Date().toISOString(),...(t?{feedback:fbAdd(t,"approved")}:{})});
+      toast("Approved · counts toward this month's pay")}
+  }catch(err){b.disabled=false;failToast(err)}
+});
+$("#f-job").addEventListener("submit",e=>{e.preventDefault();
+  const raw=$("#j-raw").value.trim();
+  if(!safeUrl(raw)){toast("The raw footage link needs to be a full https:// Drive link.");return}
+  save(()=>db.collection("edits").add({title:$("#j-title").value.trim(),project:$("#j-proj").value,assignee:$("#j-who").value,format:$("#j-fmt").value,due:$("#j-due").value,rawLink:raw,refLink:$("#j-ref").value.trim(),brief:$("#j-brief").value.trim(),status:"Brief",version:0,feedback:[],created:new Date().toISOString()}),"Job sent to the queue",e.target).then(ok=>{if(ok&&pendingScript){db.doc("scripts/"+pendingScript).update({status:"Sent to edit"}).catch(()=>{});pendingScript=null}})});
+
+function renderProjects(){
+  const el=$("#board");
+  if(!S.projects.length){el.innerHTML=`<div class="empty">No projects yet.</div>`;return}
+  el.innerHTML=S.projects.slice().sort((a,b)=>(a.date||"9").localeCompare(b.date||"9")).map(p=>{
+    const logs=S.logs.filter(l=>l.project===p.id);
+    const appr=S.approvals.filter(a=>a.project===p.id);
+    const spent=logs.reduce((a,l)=>a+logCost(l),0)+appr.reduce((a,x)=>a+approvalCost(x),0)+S.spend.filter(s=>s.project===p.id).reduce((a,s)=>a+(Number(s.amount)||0),0);
+    const budget=Number(p.budget)||0;
+    const hrs=logs.reduce((a,l)=>a+(Number(l.hours)||0),0);
+    const openJobs=S.edits.filter(e=>e.project===p.id&&e.status!=="Approved").length;
+    const sp=S.sponsors.filter(s=>s.project===p.id&&s.stage!=="Declined");
+    const pct=budget?Math.min(100,spent/budget*100):0;
+    const state=isAdmin&&budget&&spent>budget?["bad","Over budget"]:isAdmin&&budget&&pct>80?["warn","Near budget"]:["good",p.status||"Active"];
+    return `<article class="proj" data-open="project:${esc(p.id)}" tabindex="0" aria-label="Open ${esc(p.name)}"><div class="band" style="background:${esc(p.color)}"></div><div class="in">
+      <div class="row"><span class="small muted">${esc(p.type||"")}${p.date?" · "+esc(p.date):""}</span><span class="pill ${state[0]}">${state[1]}</span></div>
+      <div class="name">${esc(p.name)}</div>
+      ${isAdmin&&budget?`<div class="bar"><i style="width:${pct}%;background:${esc(p.color)}"></i></div>`:""}
+      ${isAdmin?`<div class="row"><span>Spent</span><b>${usd(spent)}${budget?" / "+usd(budget):""}</b></div>`:""}
+      <div class="row"><span>Hours logged</span><b>${hrs.toFixed(1)}</b></div>
+      <div class="row"><span>Edits approved · open</span><b>${appr.length} · ${openJobs}</b></div>
+      <div class="row"><span>Sponsors</span><b>${sp.length?esc(sp.map(s=>s.name).join(", ")):"—"}</b></div>
+      ${p.notes?`<div class="small muted">${esc(p.notes)}</div>`:""}
+    </div></article>`}).join("");
+}
+
+function renderTeam(){
+  const order=["Core","Contractor","Intern","Offshore"];
+  const rows=S.team.slice().sort((a,b)=>order.indexOf(a.tier)-order.indexOf(b.tier));
+  const modelLbl={hourly:"Hourly",per_unit:"Per approved edit",monthly:"Flat monthly",unpaid:"Unpaid / equity",tbd:"Not set"};
+  const head=isAdmin?`<tr><th>Person</th><th>Group</th><th>Pay</th><th class="num">Rate</th><th class="num">Hrs this mo.</th><th class="num">Approved edits</th><th class="num">Owed this mo.</th><th>Paid via</th></tr>`:`<tr><th>Person</th><th>Group</th><th class="num">Hrs this mo.</th><th class="num">Approved edits</th></tr>`;
+  $("#t-team").innerHTML=head+(rows.length?rows.map(p=>{
+    const h=S.logs.filter(l=>l.who===p.id&&monthKey(l.date)===MK).reduce((a,l)=>a+(Number(l.hours)||0),0);
+    const ap=approvedThisMonth(p.id);
+    if(!isAdmin)return `<tr><td><b>${esc(p.name)}</b><div class="small muted">${esc(p.role||"")}</div></td><td>${esc(p.tier)}</td><td class="num">${h.toFixed(1)}</td><td class="num">${ap}</td></tr>`;
+    const r=rateOf(p.id),model=r.model||"tbd";
+    return `<tr><td><b>${esc(p.name)}</b><div class="small muted">${esc(p.role||"")}</div></td><td>${esc(p.tier)}</td><td>${model==="tbd"?'<span class="pill warn">Set rate</span>':esc(modelLbl[model]||"")}</td><td class="num">${r.rate?usd(r.rate):"—"}</td><td class="num">${h.toFixed(1)}</td><td class="num">${ap}</td><td class="num">${usd(owedThisMonth(p.id))}</td><td class="small">${esc(r.via||"—")}</td></tr>`}).join(""):`<tr><td colspan="8" class="muted">No one on the roster yet.</td></tr>`);
+  const opts=S.team.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+  ["#l-who","#j-who"].forEach(s=>{const v=$(s).value;$(s).innerHTML=opts;if(v)$(s).value=v});
+  if(!$("#j-who").dataset.set&&S.team.find(p=>p.id==="aman")){$("#j-who").value="aman";$("#j-who").dataset.set=1}
+}
+function projOptions(sel,withNone){
+  const o=(withNone?`<option value="">None</option>`:"")+S.projects.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join("");
+  document.querySelectorAll(sel).forEach(e=>{const v=e.value;e.innerHTML=o;if(v)e.value=v});
+}
+function renderLog(){
+  const rows=S.logs.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||"")).slice(0,40);
+  $("#t-log").innerHTML=`<tr><th>Date</th><th>Who</th><th>Project</th><th>Task</th><th class="num">Hrs</th><th class="num">Units</th>${isAdmin?'<th class="num">Cost</th>':""}<th>Produced</th></tr>`+
+   (rows.length?rows.map(l=>{const p=projById(l.project);return `<tr><td>${esc(l.date)}</td><td>${esc(personById(l.who)?.name||"?")}</td><td><i class="sw" style="background:${esc(p?.color||"var(--muted)")}"></i>${esc(p?.name||"—")}</td><td>${esc(l.task)}</td><td class="num">${Number(l.hours||0).toFixed(2)}</td><td class="num">${l.units||0}</td>${isAdmin?`<td class="num">${usd(logCost(l))}</td>`:""}<td class="small">${esc(l.note||"")}</td></tr>`}).join(""):`<tr><td colspan="8" class="muted">No work logged yet. The first entry from the form above shows up here and on the Command tab.</td></tr>`);
+}
+const STAGE_CLS={Paid:"good",Committed:"gold","In-kind":"good","Proposal sent":"warn",Prospect:"",Declined:"bad"};
+const STAGE_ORDER=["Paid","Committed","In-kind","Proposal sent","Prospect","Declined"];
+function delsOf(id){return S.deliverables.filter(d=>d.sponsor===id).sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")))}
+function renderSponsors(){
+  const rows=S.sponsors.slice().sort((a,b)=>STAGE_ORDER.indexOf(a.stage)-STAGE_ORDER.indexOf(b.stage));
+  if(isAdmin){
+    const paid=rows.filter(s=>s.stage==="Paid").reduce((a,s)=>a+cashOf(s.id),0);
+    const committed=rows.filter(s=>s.stage==="Committed").reduce((a,s)=>a+cashOf(s.id),0);
+    const unpriced=rows.filter(s=>["Committed","Paid"].includes(s.stage)&&!cashOf(s.id)).length;
+    $("#sp-kpis").innerHTML=[{v:usd(paid),l:"Cash received"},{v:usd(committed),l:"Committed, not yet received"},{v:rows.filter(s=>["Prospect","Proposal sent"].includes(s.stage)).length,l:"In pipeline"},{v:unpriced,l:"Active deals missing a dollar value",warn:unpriced>0}]
+      .map(k=>`<div class="panel kpi"><div class="v ${k.warn?"":"gold"}" ${k.warn?'style="color:var(--warn)"':""}>${k.v}</div><div class="l">${k.l}</div></div>`).join("");
+  }
+  $("#t-sponsors").innerHTML=`<tr><th>Sponsor</th><th>Stage</th><th>Project</th>${isAdmin?'<th class="num">Cash</th>':""}<th>Deliverables</th><th>Next step</th></tr>`+
+   (rows.length?rows.map(s=>{const p=projById(s.project),d=delsOf(s.id),done=d.filter(x=>x.done).length;
+     return `<tr data-open="sponsor:${esc(s.id)}" tabindex="0" aria-label="Open ${esc(s.name)}"><td><b>${esc(s.name)}</b><div class="small muted">${esc(s.contact||"")}</div></td><td><span class="pill ${STAGE_CLS[s.stage]||""}">${esc(s.stage)}</span></td><td>${p?`<i class="sw" style="background:${esc(p.color)}"></i>${esc(p.name)}`:"—"}</td>${isAdmin?`<td class="num">${cashOf(s.id)?usd(cashOf(s.id)):'<span class="muted">not set</span>'}</td>`:""}<td class="small">${d.length?`${done} of ${d.length} done`:esc(s.deliverables||"—")}</td><td class="small">${esc(s.next||"")}</td></tr>`}).join(""):`<tr><td colspan="6" class="muted">No sponsors recorded yet.</td></tr>`);
+}
+function renderSpend(){
+  if(!isAdmin)return;
+  const tot=S.spend.reduce((a,s)=>a+(Number(s.amount)||0),0);
+  const mo=S.spend.filter(s=>monthKey(s.date)===MK).reduce((a,s)=>a+(Number(s.amount)||0),0);
+  const byCh={};S.spend.forEach(s=>byCh[s.channel]=(byCh[s.channel]||0)+(Number(s.amount)||0));
+  const top=Object.entries(byCh).sort((a,b)=>b[1]-a[1])[0];
+  $("#ad-kpis").innerHTML=[{v:usd(mo),l:"Spend this month"},{v:usd(tot),l:"All recorded spend"},{v:top?esc(top[0]):"—",l:"Largest channel"},{v:'<span style="color:var(--warn)">Off</span>',l:"Meta Ads → Metricool link"}]
+    .map(k=>`<div class="panel kpi"><div class="v">${k.v}</div><div class="l">${k.l}</div></div>`).join("");
+  const rows=S.spend.slice().sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("#t-spend").innerHTML=`<tr><th>Date</th><th>Channel</th><th>Project</th><th class="num">Amount</th><th>Result</th></tr>`+
+   (rows.length?rows.map(s=>{const p=projById(s.project);return `<tr><td>${esc(s.date)}</td><td>${esc(s.channel)}</td><td>${p?`<i class="sw" style="background:${esc(p.color)}"></i>${esc(p.name)}`:"—"}</td><td class="num">${usd(s.amount)}</td><td class="small">${esc(s.result||"")}</td></tr>`}).join(""):`<tr><td colspan="5" class="muted">No paid spend recorded. Add each boost, ad or promotion here so cost per application can be calculated.</td></tr>`);
+}
+
+function renderAll(){
+  projOptions("#l-proj,#a-proj,#j-proj");projOptions("#s-proj,#k-proj",true);
+  renderTeam();renderCommand();renderQueue();renderLab();renderProjects();renderLog();renderSponsors();renderSpend();renderCalendar();renderDetail();
+}
+
+// Forms
+function guard(){if(!db){toast("Open this page in claude.ai, signed in, to save changes.");return false}return true}
+function failToast(e){toast(e?.code==="permission-denied"||e?.code==="not_granted"||e?.code==="forbidden"?"Your access is view-only for this. Ask Sanjeet to change your access.":"Couldn't save: "+(e?.message||"try again"))}
+async function save(fn,msg,form){if(!guard())return false;try{await fn();toast(msg);if(form){form.reset();["#l-date","#a-date"].forEach(s=>$(s).value=today);$("#j-due").value=plusDays(3)}return true}catch(e){failToast(e);return false}}
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,40);
+$("#f-log").addEventListener("submit",e=>{e.preventDefault();save(()=>db.collection("logs").add({who:$("#l-who").value,project:$("#l-proj").value,date:$("#l-date").value||today,task:$("#l-task").value,hours:Number($("#l-hours").value)||0,units:Number($("#l-units").value)||0,note:$("#l-note").value.trim(),created:Date.now()}),"Logged",e.target)});
+$("#f-project").addEventListener("submit",e=>{e.preventDefault();const n=$("#p-name").value.trim();save(()=>db.doc("projects/"+slug(n)).set({name:n,type:$("#p-type").value,date:$("#p-date").value,budget:Number($("#p-budget").value)||0,color:$("#p-color").value,status:"Active"}),"Project added",e.target)});
+$("#f-person").addEventListener("submit",e=>{e.preventDefault();const n=$("#m-name").value.trim(),id=slug(n);save(async()=>{
+  await db.doc("team/"+id).set({name:n,role:$("#m-role").value.trim(),tier:$("#m-tier").value});
+  await db.doc("rates/"+id).set({model:$("#m-model").value,rate:Number($("#m-rate").value)||0,via:$("#m-via").value.trim()});
+},"Saved",e.target)});
+$("#f-sponsor").addEventListener("submit",e=>{e.preventDefault();const n=$("#s-name").value.trim(),id=slug(n);
+  save(async()=>{
+    const data={name:n,contact:$("#s-contact").value.trim(),stage:$("#s-stage").value,project:$("#s-proj").value};
+    if(S.sponsors.find(x=>x.id===id))await db.doc("sponsors/"+id).update(data);else await db.doc("sponsors/"+id).set({...data,next:""});
+    const amt=Number($("#s-amt").value)||0;
+    if(amt||S.cash.find(c=>c.id===id))await db.doc("cash/"+id).set({amount:amt});
+    for(const t of $("#s-del").value.split(",").map(x=>x.trim()).filter(Boolean))await db.collection("deliverables").add({sponsor:id,text:t,done:false,created:new Date().toISOString()});
+  },"Sponsor saved",e.target)});
+$("#f-spend").addEventListener("submit",e=>{e.preventDefault();save(()=>db.collection("spend").add({date:$("#a-date").value||today,channel:$("#a-ch").value,project:$("#a-proj").value,amount:Number($("#a-amt").value)||0,result:$("#a-res").value.trim()}),"Spend recorded",e.target)});
+
+$("#f-link").addEventListener("submit",e=>{e.preventDefault();
+  const url=$("#k-url").value.trim();
+  if(!/^https:\/\/(drive|docs)\.google\.com\//i.test(url)){toast("Paste a Google Drive link that starts with https://drive.google.com/");return}
+  save(()=>db.collection("links").add({name:$("#k-name").value.trim(),purpose:$("#k-purpose").value.trim(),project:$("#k-proj").value,url,addedBy:myId||"",created:new Date().toISOString()}),"Folder added",e.target)});
+$("#drive").addEventListener("click",async ev=>{const b=ev.target.closest("[data-unlink]");if(!b||!guard())return;
+  if(b.dataset.confirm!=="1"){b.dataset.confirm="1";b.textContent="Tap again to remove";setTimeout(()=>{b.dataset.confirm="";b.textContent="Remove"},3000);return}
+  try{await db.doc("links/"+b.dataset.unlink).delete();toast("Folder removed")}catch(e){failToast(e)}});
+
+// Content calendar
+const POST_STATUSES=["Planned","Scripted","Filmed","In edit","Ready","Posted"];
+const POST_STATUS_CLS={Planned:"",Scripted:"",Filmed:"warn","In edit":"warn",Ready:"gold",Posted:"good"};
+const POST_DOT={Planned:"var(--line)",Scripted:"var(--muted)",Filmed:"var(--warn)","In edit":"var(--warn)",Ready:"var(--gold)",Posted:"var(--good)"};
+const CAL_PILLARS=["Events","Learn","In person","Builders","Inside the room","The Seattle ambition","The standard","The invitation"];
+const AUDIENCES=["Everyone","Owners & founders","Early-career"];
+const FORMATS=["Reel, talking head","Reel, event montage","Reel, trend format","Reel, announcement","Carousel","Photo carousel","Quote graphic","Story sequence","Live stories","LinkedIn post"];
+const pillarCls=x=>({"Events":"pl-ev","Learn":"pl-le","In person":"pl-ip"})[x]||"";
+function isoDay(d){const z=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}`}
+const localToday=isoDay(new Date());
+let calMonth=localToday.slice(0,7), calView=(window.innerWidth||1000)<700?"agenda":"month", postOpened=null;
+function postsOn(d){return S.posts.filter(x=>x.date===d).sort((a,b)=>String(a.created||"").localeCompare(String(b.created||"")))}
+function chip(x){const st=x.status||"Planned";return `<button type="button" class="chip ${pillarCls(x.pillar)}" data-post="${esc(x.id)}" title="${esc((x.title||"Untitled")+" · "+st)}"><span class="sd" style="background:${POST_DOT[st]||"var(--line)"}"></span><span class="ct">${esc(x.title||"Untitled")}</span>${x.film?'<i class="film-dot fm"></i>':""}</button>`}
+function renderCalendar(){
+  const [y,m]=calMonth.split("-").map(Number);
+  $("#cal-month").textContent=new Date(y,m-1,1).toLocaleString("en-US",{month:"long",year:"numeric"});
+  const t=new Date(),mon=new Date(t);mon.setDate(t.getDate()-((t.getDay()+6)%7));
+  const wk=[...Array(7)].map((_,i)=>{const d=new Date(mon);d.setDate(mon.getDate()+i);return isoDay(d)});
+  const wp=S.posts.filter(x=>wk.includes(x.date));
+  const gaps=wk.filter(d=>d>=localToday&&!S.posts.some(x=>x.date===d)).length;
+  $("#cal-stats").innerHTML=[[wp.length,"posts this week"],[wp.filter(x=>x.film).length,"for Sanjeet to film this week"],[wp.filter(x=>["Ready","Posted"].includes(x.status)).length,"ready or posted"],[gaps,gaps===1?"day left this week with nothing planned":"days left this week with nothing planned",gaps>0]]
+    .map(([v,l,w])=>`<div class="${w?"warnv":""}"><b>${v}</b><span>${l}</span></div>`).join("");
+  document.querySelectorAll("#v-calendar .seg button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.view===calView)));
+  $("#cal-gridwrap").hidden=calView!=="month";$("#cal-agenda").hidden=calView!=="agenda";
+  const first=new Date(y,m-1,1),lead=(first.getDay()+6)%7,dim=new Date(y,m,0).getDate(),cells=Math.ceil((lead+dim)/7)*7;
+  let h=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map(d=>`<div class="cal-dow">${d}</div>`).join("");
+  for(let i=0;i<cells;i++){const d=new Date(y,m-1,1-lead+i),iso=isoDay(d),ps=postsOn(iso);
+    h+=`<div class="cal-day${d.getMonth()!==m-1?" out":""}${iso===localToday?" today":""}${iso<localToday?" past":""}" data-newpost="${iso}"><div class="cal-num"><span>${d.getDate()}</span>${ps.some(x=>x.film)?'<i class="film-dot" title="Film day"></i>':""}</div>${ps.map(chip).join("")}</div>`}
+  $("#cal-grid").innerHTML=h;
+  let a="";for(let i=0;i<14;i++){const d=new Date();d.setDate(d.getDate()+i);const iso=isoDay(d),ps=postsOn(iso);
+    a+=`<div class="ag-day"><div class="ag-date${i===0?" today":""}"><b>${i===0?"Today":d.toLocaleDateString("en-US",{weekday:"short"})}</b><span>${md(iso)}</span></div><div class="ag-list">${ps.length?ps.map(x=>`<button type="button" class="dr-row ag-item ${pillarCls(x.pillar)}" data-post="${esc(x.id)}"><span><b>${esc(x.title||"Untitled")}</b><br><span class="small muted">${esc(x.pillar||"")}${x.format?" · "+esc(x.format):""}${x.film?" · Sanjeet films":""}</span></span><span class="pill ${POST_STATUS_CLS[x.status]||""}">${esc(x.status||"Planned")}</span></button>`).join(""):`<button type="button" class="ag-empty" data-newpost="${iso}">Nothing planned. Add a post</button>`}</div></div>`}
+  $("#cal-agenda").innerHTML=a;
+}
+function shiftMonth(n){const [y,m]=calMonth.split("-").map(Number);calMonth=isoDay(new Date(y,m-1+n,1)).slice(0,7);renderCalendar()}
+$("#cal-prev").addEventListener("click",()=>shiftMonth(-1));
+$("#cal-next").addEventListener("click",()=>shiftMonth(1));
+$("#cal-today").addEventListener("click",()=>{calMonth=localToday.slice(0,7);renderCalendar()});
+document.querySelectorAll("#v-calendar .seg button").forEach(b=>b.addEventListener("click",()=>{calView=b.dataset.view;renderCalendar()}));
+$("#cal-add").addEventListener("click",()=>openPost(null,{date:localToday}));
+$("#v-calendar").addEventListener("click",ev=>{const c=ev.target.closest("[data-post]");if(c){openPost(c.dataset.post);return}const n=ev.target.closest("[data-newpost]");if(n)openPost(null,{date:n.dataset.newpost})});
+
+function canon(o){if(Array.isArray(o))return o.map(canon);if(o&&typeof o==="object"){const r={};Object.keys(o).sort().forEach(k=>r[k]=canon(o[k]));return r}return o}
+function postKey(o){const c={...o};["id","updatedAt","updatedBy","created","source"].forEach(k=>delete c[k]);return JSON.stringify(canon(c))}
+function openPost(id,prefill){lastFocus=document.activeElement;detail={kind:"post",id:id||null,prefill:prefill||{}};$("#drawer").hidden=false;$("#drawer-bg").hidden=false;document.body.style.overflow="hidden";renderDetail(true);$("#drawer").scrollTop=0;$("#dr-close").focus()}
+function postConflictCheck(){if(!detail?.id)return;const x=S.posts.find(y=>y.id===detail.id),c=$("#pe-conflict");if(!c)return;
+  if(!x){c.hidden=false;c.firstChild.textContent="This post was just deleted by someone else. Saving will recreate it. ";return}
+  if(postOpened&&postKey(x)!==postOpened)c.hidden=false}
+const scriptRow=r=>`<div class="pe-beat"><input aria-label="Time or slide" class="pe-t" value="${esc(r.t||"")}" placeholder="0-3s"><textarea aria-label="What we see" class="pe-v" rows="2" placeholder="What we see">${esc(r.v||"")}</textarea><textarea aria-label="What is said or shown" class="pe-w" rows="2" placeholder="What is said or on screen">${esc(r.w||"")}</textarea><button type="button" class="x" data-rm=".pe-beat">Remove</button></div>`;
+const footRow=f=>`<div class="pe-footrow" data-note="${esc(f.note||"")}"><input aria-label="Footage name" class="pe-fn" value="${esc(f.name||"")}" placeholder="Name"><input aria-label="Drive link" class="pe-fu" type="url" value="${esc(f.url||"")}" placeholder="https://drive.google.com/…">${safeUrl(f.url)?`<a href="${esc(f.url)}" target="_blank" rel="noopener">Open ↗</a>`:"<span></span>"}<button type="button" class="x" data-rm=".pe-footrow">Remove</button>${f.note?`<div class="pe-footnote">${esc(f.note)}</div>`:""}</div>`;
+function capField(k,l,val){return `<div class="pe-cap"><label for="pe-${k}">${l}<textarea id="pe-${k}" rows="4" data-vc>${esc(val||"")}</textarea></label><div class="pe-cap-bar"><span class="vc" id="vc-pe-${k}"></span><button type="button" class="btn tiny ghost" data-copy="pe-${k}">Copy</button></div></div>`}
+function updateVc(t){const el=$("#vc-"+t.id);if(!el)return;const i=voiceIssues(t.value);el.textContent=i.length?"Voice check: remove the "+i.join(", "):""}
+function renderPostEditor(b){
+  const x=detail.id?S.posts.find(y=>y.id===detail.id):null;
+  $("#dr-kind").textContent=detail.id?"Post":"New post";
+  if(detail.id&&!x&&!Object.keys(detail.prefill||{}).length){b.innerHTML='<div class="empty">This post was deleted.</div>';return}
+  const v={date:localToday,title:"",status:"Planned",pillar:"Events",audience:"Everyone",format:"",length:"",film:false,platforms:["Instagram","LinkedIn"],owner:"",hook:"",script:[],footage:[],ref:"",ig:"",li:"",story:"",cta:"",flag:"",...(x||{}),...(detail.prefill||{})};
+  postOpened=detail.id?postKey(v):null;
+  const opt=(arr,cur)=>(arr.includes(cur)||!cur?arr:[cur,...arr]).map(o=>`<option ${o===cur?"selected":""}>${esc(o)}</option>`).join("");
+  b.innerHTML=`<div id="pe-conflict" class="note" hidden style="margin-bottom:12px"><span>Someone else just saved changes to this post. </span><button class="linkish" type="button" id="pe-reload">Load their version</button></div>
+  <form id="pe-form" class="pe">
+    <label for="pe-title" class="pe-title-l">Title<input id="pe-title" required value="${esc(v.title)}" placeholder="Working title"></label>
+    <div class="entry pe-row">
+      <label for="pe-date">Date<input id="pe-date" type="date" required value="${esc(v.date)}"></label>
+      <label for="pe-status">Status<select id="pe-status">${opt(POST_STATUSES,v.status)}</select></label>
+      <label for="pe-pillar">Pillar<select id="pe-pillar">${opt(CAL_PILLARS,v.pillar)}</select></label>
+      <label for="pe-aud">Audience<select id="pe-aud">${opt(AUDIENCES,v.audience)}</select></label>
+      <label for="pe-format">Format<input id="pe-format" value="${esc(v.format)}" list="pe-formats" placeholder="Reel, carousel…"></label>
+      <label for="pe-length">Length<input id="pe-length" value="${esc(v.length)}" placeholder="30s, 6 slides"></label>
+      <label for="pe-owner">Owner<select id="pe-owner"><option value="">Unassigned</option>${S.team.map(t=>`<option value="${esc(t.id)}" ${t.id===v.owner?"selected":""}>${esc(t.name)}</option>`).join("")}</select></label>
+    </div>
+    <datalist id="pe-formats">${FORMATS.map(f=>`<option value="${esc(f)}"></option>`).join("")}</datalist>
+    <div class="pe-checks">${["Instagram","LinkedIn","Stories"].map(pl=>`<label for="pe-pl-${pl}"><input type="checkbox" id="pe-pl-${pl}" data-plat="${pl}" ${(v.platforms||[]).includes(pl)?"checked":""}>${pl}</label>`).join("")}<label for="pe-film"><input type="checkbox" id="pe-film" ${v.film?"checked":""}>Sanjeet films this</label></div>
+    <label for="pe-hook">Hook<textarea id="pe-hook" rows="2" class="pe-hook" data-vc>${esc(v.hook)}</textarea></label>
+    <span class="vc" id="vc-pe-hook"></span>
+    <div><h3>Script</h3><div id="pe-script" class="pe-script">${(v.script||[]).map(scriptRow).join("")}</div><button type="button" class="btn tiny ghost" id="pe-add-beat">Add a beat</button></div>
+    <div><h3>Footage</h3><div id="pe-foot">${(v.footage||[]).map(footRow).join("")}</div>
+      <div class="pe-inline"><select id="pe-foot-pick" aria-label="Add a Drive folder"><option value="">Add one of the team's Drive folders…</option>${S.links.filter(l=>safeUrl(l.url)).map(l=>`<option value="${esc(l.id)}">${esc(l.name)}</option>`).join("")}</select><button type="button" class="btn tiny ghost" id="pe-add-foot">Add a link</button></div></div>
+    <label for="pe-ref">Visual reference and editing notes<textarea id="pe-ref" rows="2">${esc(v.ref)}</textarea></label>
+    ${capField("ig","Instagram caption",v.ig)}${capField("li","LinkedIn post",v.li)}
+    <label for="pe-story">Story<input id="pe-story" value="${esc(v.story)}"></label>
+    <div class="entry pe-row"><label for="pe-cta">Call to action<input id="pe-cta" value="${esc(v.cta)}"></label><label for="pe-flag">Flag or blocker<input id="pe-flag" value="${esc(v.flag)}" placeholder="e.g. Needs guest approval"></label></div>
+    <div class="pe-actions"><button class="btn" type="submit">Save for everyone</button>${isAdmin&&detail.id?'<button type="button" class="btn ghost" id="pe-to-edit">Send to edit queue</button>':""}${detail.id?'<button type="button" class="btn ghost" id="pe-del">Delete</button>':""}</div>
+    ${x&&x.updatedAt?`<p class="small muted" style="margin:0">Last saved ${esc(fmtWhen(Date.parse(x.updatedAt)))}${x.updatedBy?" by "+esc(names[x.updatedBy]?.name||"a teammate"):""}${x.source?` · from the ${esc(x.source)}`:""}.</p>`:""}
+  </form>`;
+  b.querySelectorAll("[data-vc]").forEach(updateVc);
+}
+function collectPost(){const g=id=>$("#"+id).value;
+  return {date:g("pe-date"),title:g("pe-title").trim(),status:g("pe-status"),pillar:g("pe-pillar"),audience:g("pe-aud"),format:g("pe-format").trim(),length:g("pe-length").trim(),owner:g("pe-owner"),
+    platforms:[...document.querySelectorAll("#pe-form [data-plat]")].filter(c=>c.checked).map(c=>c.dataset.plat),film:$("#pe-film").checked,hook:g("pe-hook").trim(),
+    script:[...document.querySelectorAll("#pe-script .pe-beat")].map(r=>({t:r.querySelector(".pe-t").value.trim(),v:r.querySelector(".pe-v").value.trim(),w:r.querySelector(".pe-w").value.trim()})).filter(r=>r.t||r.v||r.w),
+    footage:[...document.querySelectorAll("#pe-foot .pe-footrow")].map(r=>({name:r.querySelector(".pe-fn").value.trim(),url:r.querySelector(".pe-fu").value.trim(),note:r.dataset.note||""})).filter(f=>f.name||f.url),
+    ref:g("pe-ref").trim(),ig:g("pe-ig"),li:g("pe-li"),story:g("pe-story").trim(),cta:g("pe-cta").trim(),flag:g("pe-flag").trim()}}
+$("#dr-body").addEventListener("input",ev=>{if(ev.target.matches("[data-vc]"))updateVc(ev.target)});
+$("#dr-body").addEventListener("change",ev=>{if(ev.target.id!=="pe-foot-pick"||!ev.target.value)return;const l=S.links.find(y=>y.id===ev.target.value);if(l)$("#pe-foot").insertAdjacentHTML("beforeend",footRow({name:l.name,url:l.url,note:l.purpose||""}));ev.target.value=""});
+$("#dr-body").addEventListener("click",async ev=>{
+  const t=ev.target;
+  if(t.id==="pe-add-beat"){$("#pe-script").insertAdjacentHTML("beforeend",scriptRow({}));$("#pe-script").lastElementChild.querySelector("input").focus();return}
+  if(t.id==="pe-add-foot"){$("#pe-foot").insertAdjacentHTML("beforeend",footRow({}));$("#pe-foot").lastElementChild.querySelector("input").focus();return}
+  if(t.matches("[data-rm]")){t.closest(t.dataset.rm)?.remove();return}
+  if(t.matches("[data-copy]")){const ta=$("#"+t.dataset.copy);try{await navigator.clipboard.writeText(ta.value);toast("Copied")}catch(e){ta.focus();ta.select();toast("Selected. Copy it from your keyboard.")}return}
+  if(t.id==="pe-reload"){detail.prefill={};renderDetail(true);return}
+  if(t.id==="pe-del"){if(t.dataset.confirm!=="1"){t.dataset.confirm="1";t.textContent="Tap again to delete";setTimeout(()=>{t.dataset.confirm="";t.textContent="Delete"},3000);return}
+    if(!guard())return;try{await db.doc("posts/"+detail.id).delete();closeDetail();toast("Post deleted")}catch(e){failToast(e)}return}
+  if(t.id==="pe-to-edit"){const v=collectPost(),raw=(v.footage.find(f=>safeUrl(f.url))||{}).url||"";
+    const jf=/carousel/i.test(v.format)?"Carousel":/stor/i.test(v.format)?"Story sequence":/linkedin/i.test(v.format)?"LinkedIn video 1:1":/interview/i.test(v.format)?"Interview cut":"Reel 9:16";
+    closeDetail();showTab("queue");$("#j-title").value=v.title;$("#j-fmt").value=jf;$("#j-raw").value=raw;
+    const due=new Date(v.date+"T12:00:00");due.setDate(due.getDate()-1);$("#j-due").value=isoDay(due)<localToday?localToday:isoDay(due);
+    $("#j-brief").value=[`Posts ${md(v.date)}.`,v.hook?`Hook: ${v.hook}`:"",...v.script.map(r=>`${r.t}: ${r.v}${r.w?" / "+r.w:""}`),v.ref?`Notes: ${v.ref}`:"",v.cta?`End card CTA: ${v.cta}`:""].filter(Boolean).join("\n");
+    $("#new-job").scrollIntoView({behavior:"smooth",block:"start"});toast(raw?"Check the brief, then send to the editor.":"Add the raw footage link, then send to the editor.");return}
+});
+
+// Detail drawer: one project or one sponsor
+let detail=null, lastFocus=null;
+const JOB_CLS={Brief:"","In edit":"warn","In review":"gold","Changes requested":"bad",Approved:"good"};
+function openDetail(kind,id){lastFocus=document.activeElement;detail={kind,id};$("#drawer").hidden=false;$("#drawer-bg").hidden=false;document.body.style.overflow="hidden";renderDetail(true);$("#drawer").scrollTop=0;$("#dr-close").focus()}
+function closeDetail(){detail=null;$("#drawer").hidden=true;$("#drawer-bg").hidden=true;document.body.style.overflow="";try{lastFocus?.focus()}catch(e){}}
+$("#dr-close").addEventListener("click",closeDetail);
+$("#drawer-bg").addEventListener("click",closeDetail);
+document.addEventListener("click",ev=>{const o=ev.target.closest("[data-open]");if(!o||ev.target.closest("a"))return;const i=o.dataset.open.indexOf(":");openDetail(o.dataset.open.slice(0,i),o.dataset.open.slice(i+1))});
+document.addEventListener("keydown",ev=>{
+  if(ev.key==="Escape"&&detail){closeDetail();return}
+  const o=ev.target.closest?.("[data-open]");
+  if(o&&o===ev.target&&o.tagName!=="BUTTON"&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();o.click()}
+});
+const jobRows=jobs=>jobs.length?jobs.sort((a,b)=>(a.due||"9").localeCompare(b.due||"9")).map(j=>{const cut=safeUrl(j.cutLink);return `<div class="dr-row"><span><b>${esc(j.title)}</b><br><span class="small muted">${esc(personById(j.assignee)?.name||"Unassigned")}${j.due&&j.status!=="Approved"?" · due "+md(j.due):""}${cut?` · <a href="${esc(cut)}" target="_blank" rel="noopener">latest cut ↗</a>`:""}</span></span><span class="pill ${JOB_CLS[j.status]||""}">${esc(j.status)}</span></div>`}).join(""):`<div class="empty">No edit jobs yet.</div>`;
+function renderDetail(force){
+  if(!detail)return;
+  const b=$("#dr-body"),ae=document.activeElement;
+  if(detail.kind==="post"){if(force)renderPostEditor(b);else postConflictCheck();return}
+  if(!force&&ae&&b.contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)&&ae.type!=="checkbox")return; // don't wipe a half-typed edit
+  if(detail.kind==="project")return renderProjectDetail(b);
+  if(detail.kind==="sponsor")return renderSponsorDetail(b);
+}
+function renderProjectDetail(b){
+  $("#dr-kind").textContent="Project";
+  const p=projById(detail.id);if(!p){b.innerHTML='<div class="empty">This project no longer exists.</div>';return}
+  const logs=S.logs.filter(l=>l.project===p.id),appr=S.approvals.filter(a=>a.project===p.id),jobs=S.edits.filter(e=>e.project===p.id);
+  const sps=S.sponsors.filter(x=>x.project===p.id),folders=S.links.filter(l=>l.project===p.id&&safeUrl(l.url));
+  const hrs=logs.reduce((a,l)=>a+(Number(l.hours)||0),0);
+  const spent=logs.reduce((a,l)=>a+logCost(l),0)+appr.reduce((a,x)=>a+approvalCost(x),0)+S.spend.filter(x=>x.project===p.id).reduce((a,x)=>a+(Number(x.amount)||0),0);
+  const byWho={};logs.forEach(l=>{const w=byWho[l.who]||(byWho[l.who]={h:0,c:0});w.h+=Number(l.hours)||0;w.c+=logCost(l)});
+  appr.forEach(a=>{const w=byWho[a.assignee]||(byWho[a.assignee]={h:0,c:0});w.c+=approvalCost(a);w.e=(w.e||0)+1});
+  const stats=[[hrs.toFixed(1),"hours logged"],[appr.length,"edits approved"],[jobs.filter(j=>j.status!=="Approved").length,"edits in progress"],[sps.filter(x=>x.stage!=="Declined").length,"sponsors"]];
+  if(isAdmin)stats.push([usd(spent),Number(p.budget)?"spent of "+usd(p.budget):"spent so far"]);
+  b.innerHTML=`<div class="dr-band" style="background:${esc(p.color||"var(--muted)")}"></div>
+    <div class="small muted">${esc(p.type||"")}${p.date?" · "+esc(p.date):""}</div>
+    <h2 id="dr-title">${esc(p.name)}</h2>
+    <div class="tags"><span class="pill ${p.status==="Done"?"":p.status==="On hold"?"warn":"good"}">${esc(p.status||"Active")}</span></div>
+    ${p.notes?`<p style="margin:12px 0 0">${esc(p.notes)}</p>`:""}
+    <div class="dr-stats">${stats.map(([v,l])=>`<div><b>${v}</b><span>${l}</span></div>`).join("")}</div>
+    <div class="dr-sec"><h3>Sponsors</h3><div class="dr-list">${sps.length?sps.map(x=>{const d=delsOf(x.id);return `<button class="dr-row" type="button" data-open="sponsor:${esc(x.id)}"><span><b>${esc(x.name)}</b><br><span class="small muted">${d.length?`${d.filter(y=>y.done).length} of ${d.length} deliverables done`:"No deliverables listed"}</span></span><span class="pill ${STAGE_CLS[x.stage]||""}">${esc(x.stage)}</span></button>`}).join(""):`<div class="empty">No sponsors on this project.</div>`}</div></div>
+    <div class="dr-sec"><h3>Edit jobs</h3><div class="dr-list">${jobRows(jobs)}</div></div>
+    <div class="dr-sec"><h3>Who worked on it</h3><div class="dr-list">${Object.keys(byWho).length?Object.entries(byWho).sort((a,b)=>b[1].h-a[1].h).map(([id,w])=>`<div class="dr-row"><span>${esc(personById(id)?.name||"Unknown")}</span><span class="small muted">${w.h.toFixed(1)} h${w.e?` · ${w.e} approved edit${w.e>1?"s":""}`:""}${isAdmin?` · ${usd(w.c)}`:""}</span></div>`).join(""):`<div class="empty">Nobody has logged work on this yet.</div>`}</div></div>
+    <div class="dr-sec"><h3>Drive folders</h3><div class="dr-list">${folders.length?folders.map(l=>`<div class="dr-row"><span><a href="${esc(l.url)}" target="_blank" rel="noopener"><b>${esc(l.name)}</b> ↗</a><br><span class="small muted">${esc(l.purpose||"")}</span></span></div>`).join(""):`<div class="empty">No folders tagged to this project. Add one in the Edit queue and pick this project.</div>`}</div></div>
+    <div class="dr-sec"><h3>Recent work</h3><div class="dr-list">${logs.length?logs.slice().sort((a,b)=>String(b.date).localeCompare(String(a.date))).slice(0,8).map(l=>`<div class="dr-row"><span><b>${esc(personById(l.who)?.name||"?")}</b> · ${esc(l.task)}<br><span class="small muted">${esc(l.note||"")}</span></span><span class="small muted">${md(l.date)} · ${Number(l.hours||0).toFixed(1)} h</span></div>`).join(""):`<div class="empty">No work logged yet.</div>`}</div></div>
+    ${isAdmin?`<div class="dr-sec"><h3>Edit project</h3><form class="entry" id="dp-form">
+      <label for="dp-status">Status<select id="dp-status">${["Active","On hold","Done"].map(x=>`<option ${x===(p.status||"Active")?"selected":""}>${x}</option>`).join("")}</select></label>
+      <label for="dp-date">Date<input id="dp-date" type="date" value="${esc(p.date||"")}"></label>
+      <label for="dp-budget">Media budget ($)<input id="dp-budget" type="number" min="0" step="1" value="${Number(p.budget)||""}"></label>
+      <label for="dp-color">Color<input id="dp-color" type="color" value="${/^#[0-9a-f]{6}$/i.test(p.color||"")?p.color:"#8a8578"}"></label>
+      <label for="dp-notes" style="grid-column:1/-1">Notes<textarea id="dp-notes" rows="2">${esc(p.notes||"")}</textarea></label>
+      <button class="btn" type="submit">Save changes</button></form></div>`:""}`;
+}
+function renderSponsorDetail(b){
+  $("#dr-kind").textContent="Sponsor";
+  const x=S.sponsors.find(y=>y.id===detail.id);if(!x){b.innerHTML='<div class="empty">This sponsor no longer exists.</div>';return}
+  const p=projById(x.project),d=delsOf(x.id),done=d.filter(y=>y.done).length,jobs=x.project?S.edits.filter(e=>e.project===x.project):[];
+  const who=id=>names[id]?.name||personById(id)?.name||"a teammate";
+  b.innerHTML=`<h2 id="dr-title" style="margin-top:6px">${esc(x.name)}</h2>
+    <div class="tags"><span class="pill ${STAGE_CLS[x.stage]||""}">${esc(x.stage)}</span>${p?`<button class="linkish small" type="button" data-open="project:${esc(p.id)}"><i class="sw" style="background:${esc(p.color)}"></i>${esc(p.name)}</button>`:""}</div>
+    ${x.contact?`<p class="small" style="margin:10px 0 0"><span class="muted">Contact:</span> ${esc(x.contact)}</p>`:""}
+    ${x.next?`<p class="note" style="margin-top:12px">${esc(x.next)}</p>`:""}
+    <div class="dr-stats"><div><b>${d.length?`${done}/${d.length}`:"—"}</b><span>deliverables done</span></div><div><b>${jobs.filter(j=>j.status!=="Approved").length}</b><span>edits in progress</span></div>${isAdmin?`<div><b>${cashOf(x.id)?usd(cashOf(x.id)):"—"}</b><span>deal value</span></div>`:""}</div>
+    <div class="dr-sec"><h3>What we owe them</h3>
+      <div class="dels">${d.length?d.map(y=>`<label for="del-${esc(y.id)}" class="${y.done?"done":""}"><input type="checkbox" id="del-${esc(y.id)}" data-del="${esc(y.id)}" ${y.done?"checked":""}><span class="txt">${esc(y.text)}</span><span class="meta">${y.done&&y.doneAt?`${esc(who(y.doneBy))} · ${md(String(y.doneAt).slice(0,10))}`:""}${isAdmin?`<button class="x" type="button" data-undel="${esc(y.id)}">Remove</button>`:""}</span></label>`).join(""):`<div class="empty">${x.deliverables?`Notes from the deal: ${esc(x.deliverables)}. `:""}No checklist yet.${isAdmin?" Add each deliverable below.":""}</div>`}</div>
+      ${isAdmin?`<form class="entry" id="dd-form" style="margin-top:10px"><label for="dd-text" style="grid-column:1/-1">Add a deliverable<input id="dd-text" required placeholder="e.g. Logo on the recap reel end card"></label><button class="btn" type="submit">Add</button></form>`:""}
+    </div>
+    <div class="dr-sec"><h3>Content in production${p?" for "+esc(p.name):""}</h3><div class="dr-list">${p?jobRows(jobs):`<div class="empty">Link this sponsor to a project to see its edit jobs here.</div>`}</div></div>
+    ${isAdmin?`<div class="dr-sec"><h3>Edit sponsor</h3><form class="entry" id="ds-form">
+      <label for="ds-stage">Stage<select id="ds-stage">${STAGE_ORDER.map(y=>`<option ${y===x.stage?"selected":""}>${y}</option>`).join("")}</select></label>
+      <label for="ds-amt">Deal value ($)<input id="ds-amt" type="number" min="0" step="1" value="${cashOf(x.id)||""}"></label>
+      <label for="ds-contact">Contact<input id="ds-contact" value="${esc(x.contact||"")}"></label>
+      <label for="ds-proj">Project<select id="ds-proj"><option value="">None</option>${S.projects.map(y=>`<option value="${esc(y.id)}" ${y.id===x.project?"selected":""}>${esc(y.name)}</option>`).join("")}</select></label>
+      <label for="ds-next" style="grid-column:1/-1">Next step<input id="ds-next" value="${esc(x.next||"")}"></label>
+      <button class="btn" type="submit">Save changes</button></form></div>`:""}`;
+}
+$("#dr-body").addEventListener("change",async ev=>{const c=ev.target.closest("[data-del]");if(!c||!guard())return;
+  try{await db.doc("deliverables/"+c.dataset.del).update({done:c.checked,doneBy:c.checked?(myId||""):"",doneAt:c.checked?new Date().toISOString():""});toast(c.checked?"Marked done":"Marked not done")}catch(e){c.checked=!c.checked;failToast(e)}});
+$("#dr-body").addEventListener("click",async ev=>{const b=ev.target.closest("[data-undel]");if(!b)return;ev.preventDefault();if(!guard())return;
+  if(b.dataset.confirm!=="1"){b.dataset.confirm="1";b.textContent="Tap again";setTimeout(()=>{b.dataset.confirm="";b.textContent="Remove"},3000);return}
+  try{await db.doc("deliverables/"+b.dataset.undel).delete();toast("Removed")}catch(e){failToast(e)}});
+$("#dr-body").addEventListener("submit",async ev=>{ev.preventDefault();if(!guard()||!detail)return;const f=ev.target,id=detail.id;
+  try{
+    if(f.id==="dp-form"){await db.doc("projects/"+id).update({status:$("#dp-status").value,date:$("#dp-date").value,budget:Number($("#dp-budget").value)||0,color:$("#dp-color").value,notes:$("#dp-notes").value.trim()});toast("Project saved")}
+    if(f.id==="ds-form"){await db.doc("sponsors/"+id).update({stage:$("#ds-stage").value,contact:$("#ds-contact").value.trim(),project:$("#ds-proj").value,next:$("#ds-next").value.trim()});
+      const amt=Number($("#ds-amt").value)||0;if(amt||S.cash.find(c=>c.id===id))await db.doc("cash/"+id).set({amount:amt});toast("Sponsor saved")}
+    if(f.id==="pe-form"){const data=collectPost();if(!data.title){toast("Give the post a title.");return}if(!data.date){toast("Pick a date.");return}
+      data.updatedBy=myId||"";data.updatedAt=new Date().toISOString();
+      if(detail.id){const cur=S.posts.find(x=>x.id===detail.id);data.created=cur?.created||data.updatedAt;if(cur?.source)data.source=cur.source;await db.doc("posts/"+detail.id).set(data)}
+      else{data.created=data.updatedAt;const r=await db.collection("posts").add(data);detail.id=r.id}
+      detail.prefill=data;calMonth=data.date.slice(0,7);toast("Saved for everyone")}
+    if(f.id==="dd-form"){const t=$("#dd-text").value.trim();if(!t)return;await db.collection("deliverables").add({sponsor:id,text:t,done:false,created:new Date().toISOString()});toast("Deliverable added")}
+    document.activeElement?.blur?.();renderDetail(true);
+  }catch(e){failToast(e)}});
+
+// Content lab
+const PILLARS=["Builders","Inside the room","The Seattle ambition","The standard","The invitation"];
+const HUNT=[
+  ["Inspiration tab.","Profile → Professional dashboard → Your tools → Inspiration. Save 5 reels that keep showing up."],
+  ["Reels Trends.","Menu → Settings and activity → Reels Trends. Note the top sounds rising this week."],
+  ["Reel templates.","+ → Reel → Templates → Trending. Look for a template that suits event footage."],
+  ["TikTok Creative Center.","Trending sounds and videos. Instagram usually follows a week or two later."],
+  ["@Creators on Instagram.","Instagram's own trend posts and broadcast channel."],
+  ["Benchmark accounts.","Soho House, Hampton, YPO, Founders Club, and two Seattle communities. What did they post that worked?"],
+  ["LinkedIn.","Top posts from Seattle founders and operators this week. Topics, not sounds."],
+  ["YPN DMs and comments.","Every question asked twice is a script."],
+  ["Log at least 5 trends below.","Then draft scripts from the best 2."],
+];
+const HYPE=/\b(amazing|exciting|incredible|game[- ]?changer|don'?t miss( out)?|epic|insane|crushing it|unmissable)\b/i;
+function voiceIssues(t){const s=String(t||""),out=[];if(s.includes("!"))out.push("exclamation point");if(/[—–]/.test(s))out.push("dash");if(HYPE.test(s))out.push("hype word");if(/[\u{1F300}-\u{1FAFF}]/u.test(s))out.push("emoji");return out}
+function weekKey(){const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toISOString().slice(0,10)}
+let pendingScript=null, drafts=[], sample=null, aiCtl=null;
+["#ai-pillar","#sc-pillar"].forEach(sel=>$(sel).insertAdjacentHTML("beforeend",PILLARS.map(p=>`<option>${p}</option>`).join("")));
+$("#s2-pillar").innerHTML=PILLARS.map(p=>`<option>${p}</option>`).join("");
+
+function scriptCard(sc,draftIdx){
+  const issues=voiceIssues([sc.hook,(sc.beats||[]).join(" "),sc.onScreen,sc.caption,sc.cta].join(" "));
+  const st=sc.status||"Idea", cls={Idea:"",Approved:"gold",Filmed:"good","Sent to edit":"good",Passed:"bad"}[st]||"";
+  let acts="";
+  if(draftIdx!=null)acts=`<button class="btn tiny" type="button" data-save-draft="${draftIdx}">Save to script bank</button>`;
+  else{
+    if(st==="Idea"&&isAdmin)acts+=`<button class="btn tiny" data-sact="approve" data-id="${esc(sc.id)}">Approve to film</button><button class="btn tiny ghost" data-sact="pass" data-id="${esc(sc.id)}">Pass</button>`;
+    if(st==="Idea"&&!isAdmin)acts+=`<span class="small muted">Waiting on Sanjeet's approval</span>`;
+    if(st==="Approved")acts+=`<button class="btn tiny" data-sact="filmed" data-id="${esc(sc.id)}">Mark filmed</button><button class="btn tiny ghost" data-sact="tocal" data-id="${esc(sc.id)}">Put on calendar</button>`;
+    if(st==="Filmed"&&isAdmin)acts+=`<button class="btn tiny" data-sact="toedit" data-id="${esc(sc.id)}">Send to edit queue</button>`;
+    if(st==="Passed"&&isAdmin)acts+=`<button class="btn tiny ghost" data-sact="revive" data-id="${esc(sc.id)}">Back to ideas</button>`;
+  }
+  return `<article class="scr">
+    <div class="tags">${draftIdx==null?`<span class="pill ${cls}">${esc(st)}</span>`:""}<span class="pill">${esc(sc.pillar||"")}</span><span class="pill">${esc(sc.funnel||"")}</span><span class="small muted">${esc(sc.format||"")}</span></div>
+    <div class="t">${esc(sc.title||"")}</div>
+    <div class="hook">${esc(sc.hook||"")}</div>
+    ${(sc.beats||[]).length?`<ol>${sc.beats.map(b=>`<li>${esc(b)}</li>`).join("")}</ol>`:""}
+    ${sc.onScreen?`<div class="small"><span class="muted">On screen:</span> ${esc(sc.onScreen)}</div>`:""}
+    ${sc.shotList?`<details><summary>How to film it</summary><div class="body">${esc(sc.shotList)}</div></details>`:""}
+    ${sc.caption?`<details><summary>Caption</summary><div class="body">${esc(sc.caption)}</div></details>`:""}
+    ${sc.cta?`<div class="small"><span class="muted">CTA:</span> ${esc(sc.cta)}</div>`:""}
+    ${sc.source?`<div class="small muted">Source: ${esc(sc.source)}</div>`:""}
+    ${sc.why?`<div class="small muted">${esc(sc.why)}</div>`:""}
+    ${issues.length?`<div class="vc">Voice check: remove the ${issues.join(", ")} before posting.</div>`:""}
+    ${acts?`<div class="acts">${acts}</div>`:""}
+  </article>`;
+}
+function renderLab(){
+  const wk=weekKey(), h=S.hunts.find(x=>x.id===wk)||{done:[]}, done=Array.isArray(h.done)?h.done:[];
+  const trendsWk=S.trends.filter(t=>String(t.created||"").slice(0,10)>=wk).length;
+  $("#hunt-meta").textContent=`Week of ${md(wk)} · ${done.length} of ${HUNT.length} steps done · ${trendsWk} of 5 trends logged`;
+  $("#hunt").innerHTML=HUNT.map((t,i)=>`<label for="h-${i}"><input type="checkbox" id="h-${i}" data-hunt="${i}" ${done.includes(i)?"checked":""}><span><b>${t[0]}</b> ${esc(t[1])}</span></label>`).join("");
+
+  const order={"Use it":0,Spotted:1,Passed:2};
+  const tr=S.trends.slice().sort((a,b)=>(order[a.status]??1)-(order[b.status]??1)||String(b.created||"").localeCompare(String(a.created||""))).slice(0,30);
+  $("#trends").innerHTML=tr.length?tr.map(t=>{
+    const age=t.created?Math.floor((Date.now()-Date.parse(t.created))/864e5):0, link=safeUrl(t.link);
+    const cls={"Use it":"gold",Passed:"bad"}[t.status]||"";
+    return `<article class="scr">
+      <div class="tags"><span class="pill ${cls}">${esc(t.status||"Spotted")}</span><span class="pill">${esc(t.kind||"")}</span>${t.status!=="Passed"&&age>=14?'<span class="pill warn">Aging</span>':""}</div>
+      <div class="t">${esc(t.name)}</div>
+      <div class="small">${esc(t.angle||"")}</div>
+      <div class="small muted">${esc(t.where||"")}${t.created?" · "+md(t.created.slice(0,10)):""}${link?` · <a href="${esc(link)}" target="_blank" rel="noopener" style="color:var(--fg)">Example ↗</a>`:""}</div>
+      <div class="acts"><button class="btn tiny" data-tact="draft" data-id="${esc(t.id)}">Draft scripts from this</button>${isAdmin&&t.status!=="Use it"?`<button class="btn tiny ghost" data-tact="use" data-id="${esc(t.id)}">Use it</button>`:""}${isAdmin&&t.status!=="Passed"?`<button class="btn tiny ghost" data-tact="pass" data-id="${esc(t.id)}">Pass</button>`:""}</div>
+    </article>`}).join(""):`<div class="empty">No trends logged yet. Run the Monday hunt and log what you find.</div>`;
+
+  const f=$("#sc-filter").value, pf=$("#sc-pillar").value;
+  const stageOrder={Approved:0,Filmed:1,Idea:2,"Sent to edit":3,Passed:4};
+  const list=S.scripts.filter(sc=>(f==="all"||(f==="open"?["Idea","Approved","Filmed"].includes(sc.status||"Idea"):(sc.status||"Idea")===f))&&(!pf||sc.pillar===pf))
+    .sort((a,b)=>(stageOrder[a.status||"Idea"]-stageOrder[b.status||"Idea"])||String(b.created||"").localeCompare(String(a.created||"")));
+  $("#scripts").innerHTML=list.length?list.map(sc=>scriptCard(sc)).join(""):`<div class="empty">Nothing here. Draft scripts with Claude above, or write one by hand.</div>`;
+  $("#ai-out").innerHTML=drafts.map((d,i)=>d?scriptCard(d,i):"").join("");
+}
+["#sc-filter","#sc-pillar"].forEach(s=>$(s).addEventListener("change",renderLab));
+$("#hunt").addEventListener("change",async ev=>{const c=ev.target.closest("[data-hunt]");if(!c||!guard())return;
+  const wk=weekKey(),h=S.hunts.find(x=>x.id===wk),set=new Set(Array.isArray(h?.done)?h.done:[]),i=Number(c.dataset.hunt);
+  c.checked?set.add(i):set.delete(i);
+  try{await db.doc("hunts/"+wk).set({done:[...set].sort((a,b)=>a-b),updatedBy:myId||"",updatedAt:new Date().toISOString()})}catch(e){failToast(e)}});
+$("#f-trend").addEventListener("submit",e=>{e.preventDefault();const link=$("#t-link").value.trim();
+  save(()=>db.collection("trends").add({name:$("#t-name").value.trim(),kind:$("#t-kind").value,where:$("#t-where").value,link:safeUrl(link)?link:"",angle:$("#t-angle").value.trim(),status:"Spotted",by:myId||"",created:new Date().toISOString()}),"Trend logged",e.target)});
+$("#trends").addEventListener("click",async ev=>{const b=ev.target.closest("[data-tact]");if(!b)return;const t=S.trends.find(x=>x.id===b.dataset.id);if(!t)return;
+  if(b.dataset.tact==="draft"){$("#ai-topic").value=`Trend: ${t.name}. Angle: ${t.angle||""}`;$("#ai-fmt").value="Reel, trend format";$("#ai-panel").scrollIntoView({behavior:"smooth",block:"start"});$("#ai-topic").focus();return}
+  if(!guard())return;try{await db.doc("trends/"+t.id).update({status:b.dataset.tact==="use"?"Use it":"Passed"})}catch(e){failToast(e)}});
+$("#f-script").addEventListener("submit",e=>{e.preventDefault();
+  save(()=>db.collection("scripts").add({title:$("#s2-title").value.trim(),format:$("#s2-fmt").value,pillar:$("#s2-pillar").value,funnel:$("#s2-funnel").value,hook:$("#s2-hook").value.trim(),beats:$("#s2-beats").value.split("\n").map(x=>x.trim()).filter(Boolean),onScreen:$("#s2-onscreen").value.trim(),caption:$("#s2-caption").value.trim(),cta:$("#s2-cta").value.trim(),source:$("#s2-source").value.trim(),status:"Idea",by:myId||"",created:new Date().toISOString()}),"Script saved",e.target)});
+const FMT_TO_JOB={"Reel, talking head":"Reel 9:16","Reel, event footage":"Reel 9:16","Reel, trend format":"Reel 9:16","Carousel":"Carousel","Story sequence":"Story sequence","LinkedIn post":"LinkedIn video 1:1"};
+$("#scripts").addEventListener("click",async ev=>{const b=ev.target.closest("[data-sact]");if(!b||!guard())return;const sc=S.scripts.find(x=>x.id===b.dataset.id);if(!sc)return;
+  const ref=db.doc("scripts/"+sc.id),a=b.dataset.sact;
+  try{
+    if(a==="tocal"){openPost(null,{date:localToday,title:sc.title||"",pillar:sc.pillar||"Events",format:sc.format||"",hook:sc.hook||"",status:"Scripted",film:/talking head/i.test(sc.format||""),
+      script:(sc.beats||[]).map((w,i)=>({t:String(i+1),v:"",w})),ref:sc.shotList||"",ig:sc.caption||"",cta:sc.cta||"",story:sc.onScreen?("On screen: "+sc.onScreen):""});return}
+    if(a==="approve")await ref.update({status:"Approved",approvedAt:new Date().toISOString()});
+    if(a==="pass")await ref.update({status:"Passed"});
+    if(a==="revive")await ref.update({status:"Idea"});
+    if(a==="filmed")await ref.update({status:"Filmed",filmedAt:new Date().toISOString()});
+    if(a==="toedit"){
+      pendingScript=sc.id;
+      $("#j-title").value=sc.title||"";
+      $("#j-fmt").value=FMT_TO_JOB[sc.format]||"Reel 9:16";
+      $("#j-brief").value=[`Hook: ${sc.hook||""}`,...(sc.beats||[]).map((x,i)=>`${i+1}. ${x}`),sc.onScreen?`On-screen text: ${sc.onScreen}`:"",sc.cta?`End card CTA: ${sc.cta}`:"","Captions burned in, sentence case. YPN gold on black. Under 60 seconds."].filter(Boolean).join("\n");
+      showTab("queue");$("#new-job").scrollIntoView({behavior:"smooth",block:"start"});$("#j-raw").focus();
+      toast("Paste the raw footage link, then send to the editor.");
+    }
+  }catch(e){failToast(e)}});
+$("#ai-out").addEventListener("click",async ev=>{const b=ev.target.closest("[data-save-draft]");if(!b||!guard())return;const i=Number(b.dataset.saveDraft),d=drafts[i];if(!d)return;
+  b.disabled=true;
+  try{await db.collection("scripts").add({...d,status:"Idea",by:myId||"",created:new Date().toISOString(),drafted:"claude"});drafts[i]=null;renderLab();toast("Saved to the script bank")}catch(e){b.disabled=false;failToast(e)}});
+
+function aiPrompt(){
+  const upcoming=S.projects.filter(p=>!p.date||p.date>=today).map(p=>`${p.name}${p.date?" ("+p.date+")":""}`).join("; ")||"none listed";
+  const recent=S.trends.filter(t=>t.status!=="Passed").slice(0,8).map(t=>t.name).join("; ")||"none";
+  const pillar=$("#ai-pillar").value;
+  return `You write short-form social scripts for Young Professionals Nexus (YPN), Seattle's curated membership community for ambitious young professionals. Membership is $100 a month. Events and content are the marketing layer; every script must move a viewer one step closer to applying.
+
+Who films: Sanjeet Singh, co-founder, on camera himself, 3 to 4 short videos a week, usually solo on a phone. Event footage and photos from YPN events are also available.
+
+Voice rules, strict: sentence case. Declarative, editorial, builder identity. Premium and understated, in the register of Soho House or a well-edited magazine. YPN is a peer institution: it invites, it never begs. No exclamation points. No em dashes or en dashes. No hype words (amazing, exciting, incredible, game changer, don't miss out). No emoji. At most three hashtags. Exactly one call to action.
+
+Content pillars: Builders (member and founder stories); Inside the room (what non-members miss); The Seattle ambition (city, career, business perspective); The standard (YPN's taste and values, Chardi Kala: ever-rising); The invitation (events, membership, the application).
+The YPN experience to convey: one of a kind; sensory; the venue; the fashion, because guests dress up for YPN rooms; genuine relationships; a VIP feeling; safety.
+Never invent member names, quotes or numbers. Where a real person, quote or figure is needed, write [placeholder].
+
+Upcoming YPN projects: ${upcoming}.
+Trends on our radar: ${recent}.
+
+Request:
+- Topic, trend or asset: ${$("#ai-topic").value.trim()}
+- Audience: ${$("#ai-aud").value}
+- Format: ${$("#ai-fmt").value}
+- Pillar: ${pillar||"choose the best fit for each script"}
+
+Write 3 distinct scripts with different hooks and angles. Reply with only a JSON array of 3 objects, each:
+{"title": string, "format": string, "pillar": one of the five pillar names exactly, "funnel": "attract" | "nurture" | "convert", "hook": the first line spoken or shown, under 12 words, "beats": array of 3 to 6 short strings in order, "onScreen": text overlay, "shotList": how to film it in under 15 minutes, "caption": the full caption, "cta": the single call to action, "why": one sentence on why this fits YPN now}`;
+}
+async function initSample(){
+  sample=await window.claude.use("sample");
+  $("#ai-panel").hidden=!sample;
+}
+$("#ai-stop").addEventListener("click",()=>aiCtl?.abort());
+$("#f-ai").addEventListener("submit",async e=>{e.preventDefault();if(!sample)return;
+  aiCtl=new AbortController();const go=$("#ai-go"),st=$("#ai-status");
+  go.disabled=true;$("#ai-stop").hidden=false;st.textContent="Thinking… this usually takes 20 to 60 seconds.";
+  try{
+    const out=await sample.json(aiPrompt(),{signal:aiCtl.signal,cache:false});
+    const arr=(Array.isArray(out)?out:[]).filter(x=>x&&typeof x==="object"&&x.hook).slice(0,3).map(x=>({
+      title:String(x.title||""),format:String(x.format||$("#ai-fmt").value),pillar:PILLARS.includes(x.pillar)?x.pillar:($("#ai-pillar").value||"Inside the room"),
+      funnel:["attract","nurture","convert"].includes(x.funnel)?x.funnel:"attract",hook:String(x.hook||""),beats:Array.isArray(x.beats)?x.beats.map(String).slice(0,8):[],
+      onScreen:String(x.onScreen||""),shotList:String(x.shotList||""),caption:String(x.caption||""),cta:String(x.cta||""),why:String(x.why||""),source:$("#ai-topic").value.trim()}));
+    if(!arr.length){st.textContent="Claude answered, but no usable scripts came back. Try a more specific topic.";return}
+    drafts=arr;renderLab();st.textContent="Drafts below. Save the ones worth filming; nothing is saved until you do.";
+  }catch(err){
+    const c=err?.code;
+    if(c==="cancelled")st.textContent="Stopped.";
+    else if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(c)){st.textContent="Drafting with Claude isn't available for your account on this page.";$("#ai-panel").hidden=true}
+    else if(c==="rate_limited")st.textContent="Too many drafts too fast, or your Claude usage limit is reached. Try again in a bit.";
+    else if(c==="invalid_json")st.textContent="Claude's answer didn't come back in the right shape. Press Draft again.";
+    else if(c==="refused")st.textContent="Claude declined that topic. Rephrase it and try again.";
+    else if(c==="session_expired")st.textContent="Sign in to claude.ai again, then retry.";
+    else st.textContent="Couldn't reach Claude just now. Try again.";
+  }finally{go.disabled=false;$("#ai-stop").hidden=true}
+});
+
+// Instagram: live from Metricool when the owner opens the page, saved for the team
+const MC_SERVER="Metricool Social Media Management", MC_TOOL="getAnalyticsDataByMetrics";
+const MC_METRICS=["IGEV01","IGEV05","IGEV06","IGEV22","IGEV23","IGEV38","IGEV43","IGEV44","IGEV42"];
+function tzStamp(d,end){const o=-d.getTimezoneOffset(),sg=o>=0?"+":"-",a=Math.abs(o);
+  const pad=n=>String(n).padStart(2,"0");
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${end?"23:59:59":"00:00:00"}${sg}${pad(Math.floor(a/60))}:${pad(a%60)}`}
+const MC_INPUT={brandId:6858742,from:tzStamp(new Date(Date.now()-29*864e5)),to:tzStamp(new Date(),true),metrics:MC_METRICS};
+function mapMetricool(payload){
+  const rows=payload&&Array.isArray(payload.rows)?payload.rows:null;if(!rows||!rows.length)return null;
+  const num=v=>v==null||v===""?null:Number(v), z=v=>num(v)??0;
+  return rows.map(r=>{const d=String(r[r.length-1]);return [`${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`,num(r[0]),z(r[1]),num(r[2]),z(r[3]),z(r[4]),z(r[5]),z(r[6]),z(r[7]),num(r[8])]})
+    .filter(r=>/^\d{4}-\d\d-\d\d$/.test(r[0])).sort((a,b)=>a[0].localeCompare(b[0]));
+}
+function fmtWhen(t){if(!t)return "";const d=new Date(t);return d.toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}
+function igSourceLabel(){return igMeta.source==="live"?"Metricool · live":igMeta.source==="saved"?"Metricool · synced "+fmtWhen(igMeta.at):"Metricool · Oct 11 snapshot"}
+function setIgStatus(html,warn){const el=$("#ig-status");el.innerHTML=html;el.classList.toggle("warn",!!warn)}
+function showIgSource(){
+  if(igMeta.source==="live")setIgStatus(`Instagram: <b>live</b> from Metricool · updated ${fmtWhen(igMeta.at)}`);
+  else if(igMeta.source==="saved")setIgStatus(`Instagram: last synced from Metricool ${fmtWhen(igMeta.at)}`);
+  else setIgStatus("Instagram: snapshot from Oct 11. Updates the next time Sanjeet opens this page.");
+}
+let savedIG=null, mcp=null;
+async function saveIgForTeam(rows){
+  if(!db||!isAdmin)return;
+  const body=JSON.stringify(rows);
+  if(savedIG&&savedIG.body===body)return;
+  try{await db.doc("metrics/instagram").set({rowsJson:body,syncedAt:new Date().toISOString(),brand:"ypnexus"})}catch(e){}
+}
+function onMetricool(ev){
+  if(ev.type==="data"){
+    const rows=mapMetricool(ev.result.payload);
+    if(!rows){setIgStatus("Metricool answered but returned no Instagram rows for this range.",true);return}
+    IG=rows;igMeta={source:"live",at:ev.result.cache?.storedAt||Date.now()};
+    $("#ig-allow").hidden=true;showIgSource();renderAll();saveIgForTeam(rows);return;
+  }
+  const c=ev.error?.code;
+  const fallback=()=>{if(savedIG){IG=savedIG.rows;igMeta={source:"saved",at:savedIG.at}}renderAll()};
+  if(c==="needs_reauth"){fallback();setIgStatus("Metricool needs reconnecting: claude.ai Settings → Connectors → Metricool. Showing the last sync.",true)}
+  else if(c==="server_not_connected"||c==="selection_required"||c==="server_not_found"){fallback();setIgStatus("Metricool isn't connected for this account. Add it in claude.ai Settings → Connectors. Showing the last sync.",true)}
+  else if(c==="not_in_manifest"||c==="blocked_by_policy"){fallback();setIgStatus("Metricool access is turned off for this page. Turn it on from the page's Permissions menu. Showing the last sync.",true)}
+  else if(c==="approval_required"){fallback();$("#ig-allow").hidden=false;setIgStatus("Metricool needs your OK before this page can pull live numbers.",true)}
+  else if(c==="tool_error"){setIgStatus("Metricool reported an error: "+esc(ev.error.message||"")+". Showing the last good numbers.",true)}
+  else if(c==="not_granted"||c==="capability_disabled"||c==="capability_removed"){showIgSource()}
+  else{setIgStatus("Metricool is unreachable right now. Showing the last good numbers.",true)}
+}
+async function startMetricool(){
+  if(!isAdmin)return;
+  mcp=await window.claude.use("mcp");
+  if(!mcp)return;
+  $("#ig-refresh").hidden=false;
+  mcp.watchTool(MC_SERVER,MC_TOOL,MC_INPUT,onMetricool,{cache:{staleTime:300000,gcTime:86400000},refetchInterval:1800000});
+}
+$("#ig-refresh").addEventListener("click",async()=>{if(!mcp)return;setIgStatus("Refreshing from Metricool…");
+  try{await mcp.invalidate(MC_SERVER,MC_TOOL)}catch(e){}});
+$("#ig-allow").addEventListener("click",async()=>{if(!mcp)return;
+  try{const r=await mcp.callTool(MC_SERVER,MC_TOOL,MC_INPUT,{cache:{staleTime:300000}});onMetricool({type:"data",result:r})}catch(e){onMetricool({type:"error",error:e})}});
+
+applyRole();initialTab();renderAll();
+
+// Live store
+(async()=>{
+  if(!window.claude?.use){$("#sync").textContent="Offline preview · open in claude.ai to load team data";return}
+  [db,user]=await Promise.all([window.claude.use("db"),window.claude.use("user")]);
+  if(user){isAdmin=await user.canEdit();myId=await user.id()}
+  applyRole();initialTab();
+  initSample();
+  if(!db){$("#sync").textContent="Read-only · sign in to load shared data";renderAll();return}
+  $("#sync").innerHTML=`Live · <b>shared workspace</b><span class="role">${isAdmin?"Admin":"Team"}</span>`;
+  db.doc("metrics/instagram").onSnapshot(snap=>{const d=snap.exists?snap.data():null;if(!d||!d.rowsJson)return;
+    try{const rows=JSON.parse(d.rowsJson);if(!Array.isArray(rows)||!rows.length)return;
+      savedIG={rows,at:Date.parse(d.syncedAt)||null,body:d.rowsJson};
+      if(igMeta.source!=="live"){IG=rows;igMeta={source:"saved",at:savedIG.at};showIgSource();renderAll()}}catch(e){}},()=>{});
+  startMetricool();
+  const cols=["team","projects","logs","edits","approvals","links","scripts","trends","hunts","sponsors","deliverables","posts"];
+  if(isAdmin)cols.push("rates","spend","cash");
+  let pending=null;
+  cols.forEach(c=>{
+    db.collection(c).onSnapshot(snap=>{S[c]=snap.docs.map(d=>({id:d.id,...d.data()}));cancelAnimationFrame(pending);pending=requestAnimationFrame(renderAll)},err=>{$("#sync").textContent="Couldn't load "+c+": "+(err?.message||"error")});
+  });
+})();
+</script>
+
+</body></html>
